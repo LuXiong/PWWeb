@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.custom.il8n.resources" value="mess"></constant>
+	<constant name="struts.il8b.encoding" value="GBK"></constant>
+
+
+	<package name="apis" namespace="/pass" extends="json-default">
+		<action name="login" class="com.pwweb.action.LoginAction"
+			method="ActionLogin">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+	</package>
+</struts>    
