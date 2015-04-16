@@ -2,6 +2,7 @@ package com.pwweb.service;
 
 import java.util.List;
 
+import javax.persistence.Entity;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
@@ -11,6 +12,7 @@ import com.pwweb.common.Constant;
 import com.pwweb.common.DataBaseUtils;
 import com.pwweb.model.User;
 
+@Entity
 public class PassService {
 
 	@SuppressWarnings("unchecked")
