@@ -16,6 +16,10 @@ import javax.persistence.Entity;
 @Entity
 public class RegisterAction extends ActionSupport{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2913082730224697730L;
 	private String uid;
 	private String name;
 	private Integer gender;
@@ -109,7 +113,7 @@ public class RegisterAction extends ActionSupport{
 		jsonData = new HashMap<String, Object>();
 		arrayData = new ArrayList<HashMap<String, Object>>();
 		RegisterService rs = new RegisterService();
-		String result = rs.Register(this.getUid(),this.getName(),this.getGender(),this.getPassword(),this.getPhone(),this.getAvatar(),this.getCreateTime(),this.getLastUse(),this.getDeviceId());
+		String result = rs.Register(getName(),getGender(),getPassword(),getPhone(),getAvatar(),getCreateTime(),getLastUse(),getDeviceId());
         if(result.equals(Constant.FAILURE)){
            jsonData.put("code", "-1");
 		}else{
