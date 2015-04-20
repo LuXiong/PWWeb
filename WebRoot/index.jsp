@@ -23,13 +23,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <body>
     <label for="name">name:</label>
-    <input type="text" id="name" placeholder="input your name" />
-    <button id="xionglulu">button</button>
+    <input type="text" id="data" />
+    <button id="xionglulu">publish</button>
     <script>
     $("#xionglulu").on("click",function(){
     	$.ajax({
-	    	url:'api/test',
-	    	data:{username:$("#name").val()},
+	    	url:'push/push',
+	    	data:{data:$("#data").val()},
 	    	type:"get",
 	    	success:function(data){
 	    		alert(data.msg);

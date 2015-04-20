@@ -20,9 +20,8 @@
 		</action>
 	</package>
 
-	<package name="api" namespace="/api" extends="json-default">
-		<action name="test" class="com.pwweb.action.LoginAction"
-			method="test">
+	<package name="push" namespace="/push" extends="json-default">
+		<action name="push" class="com.pwweb.action.PushAction" method="pushData">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>

@@ -29,6 +29,7 @@
 		<mapping class="com.pwweb.pojo.Clothes" />
 		<mapping class="com.pwweb.pojo.Suit" />
 		<mapping class="com.pwweb.pojo.Token" />
+		<mapping class="com.pwweb.pojo.Message" />
 
 	</session-factory>
 
