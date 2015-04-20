@@ -24,7 +24,6 @@
 
 		<property name="show_sql">true</property>
 		<!-- 实体类 -->
-		<mapping class="com.pwweb.model.User"></mapping>
 		<mapping class="com.pwweb.pojo.User" />
 		<mapping class="com.pwweb.pojo.Clothes" />
 		<mapping class="com.pwweb.pojo.Suit" />

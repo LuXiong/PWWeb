@@ -33,14 +33,14 @@ public class User implements java.io.Serializable {
 
 	/** minimal constructor */
 	public User(String uid, String name, Integer gender, String password,
-			String phone, Date createTime, Date lastUse, String deviceId) {
+			String phone, String deviceId) {
 		this.uid = uid;
 		this.name = name;
 		this.gender = gender;
 		this.password = password;
 		this.phone = phone;
-		this.createTime = createTime;
-		this.lastUse = lastUse;
+//		this.createTime = createTime;
+//		this.lastUse = lastUse;
 		this.deviceId = deviceId;
 	}
 
@@ -115,7 +115,7 @@ public class User implements java.io.Serializable {
 		this.avatar = avatar;
 	}
 
-	@Column(name = "create_time", nullable = false, length = 19)
+	@Column(name = "create_time",length = 19)
 	public Date getCreateTime() {
 		return this.createTime;
 	}
@@ -124,7 +124,7 @@ public class User implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "last_use", nullable = false, length = 19)
+	@Column(name = "last_use",length = 19)
 	public Date getLastUse() {
 		return this.lastUse;
 	}
