@@ -1,10 +1,11 @@
 package com.pwweb.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.pwweb.common.Constant;
 import com.pwweb.dao.BaseDAO;
-import com.pwweb.model.User;
+import com.pwweb.pojo.User;
 import javax.persistence.Entity;
 
 @Entity
@@ -12,12 +13,19 @@ public class RegisterService {
 
 	private BaseDAO userDAO = new BaseDAO(); // 用户DAO接口引用
 
-	public String Register(String username, String password, int gender) {
+	public String Register(String uid, String name, Integer gender, String password,
+			String phone,String avatar, Date createTime, Date lastUse, String deviceId) {
 		User user = new User();
-		user.setName(username);
-		user.setPassword(password);
+		user.setUid(uid);
+		user.setName(name);
 		user.setGender(gender);
-		user.setId("2");
+		user.setPassword(password);
+		user.setPhone(phone);
+		user.setAvatar(avatar);
+		user.setCreateTime(createTime);
+		user.setLastUse(lastUse);
+		user.setDeviceId(deviceId);
+		
 		try {
 			userDAO.saveObject(user);
 		} catch (Exception e) {
