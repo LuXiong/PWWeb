@@ -68,6 +68,12 @@ public class LoginAction extends ActionSupport {
 		return "json";
 	}
 
+	public String test(){
+		jsonData = new HashMap<String, Object>();
+		System.out.println(this.username);
+		jsonData.put("msg", this.username);
+		return SUCCESS;
+	}
 	public String ActionLogin() {
 		// JSONObject obj = new JSONObject();
 		jsonData = new HashMap<String, Object>();

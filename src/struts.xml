@@ -19,5 +19,12 @@
 			</result>
 			</action>
 	</package>
-
+	<package name="api" namespace="/api" extends="json-default">
+		<action name="test" class="com.pwweb.action.LoginAction"
+			method="test">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>	
+	</package>
 </struts>    

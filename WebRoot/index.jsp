@@ -15,12 +15,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
+	<script type="text/javascript" src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
   </head>
   
   <body>
-    This is my JSP page. <br>
+    <label for="name">name:</label>
+    <input type="text" id="name" placeholder="input your name" />
+    <button id="xionglulu">button</button>
+    <script>
+    $("#xionglulu").on("click",function(){
+    	$.ajax({
+	    	url:'api/test',
+	    	data:{username:$("#name").val()},
+	    	type:"get",
+	    	success:function(data){
+	    		alert(data.msg);
+	    	},
+	    	error:function(data){
+	    	}
+	    });
+    });
+    
+    </script>
   </body>
 </html>
