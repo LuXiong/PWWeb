@@ -155,4 +155,9 @@ public class BaseDAO {
 		query.setMaxResults(pageSize);
 		return query.list();
 	}
+
+	public void saveUser() {
+		// TODO Auto-generated method stub
+		
+	}
 }

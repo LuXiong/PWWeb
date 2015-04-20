@@ -2,35 +2,46 @@ package com.pwweb.service.Imp;
 
 import java.util.List;
 
-import com.pwweb.model.Suit;
-import com.pwweb.service.SuitService;
+import com.pwweb.dao.BaseDAO;
+import com.pwweb.pojo.Suit;
 
-public class SuitServiceImp implements SuitService{
+public class SuitServiceImp{
+	public BaseDAO suitDAO = new BaseDAO();
 
-	@Override
 	public void saveSuit(Suit suit) {
 		// TODO Auto-generated method stub
+		try {
+			suitDAO.saveObject(suit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 
-	@Override
 	public void deleteSuit(Suit suit) {
 		// TODO Auto-generated method stub
-		
+		try {
+			suitDAO.deleteObjectById(suit.getClass(), suit.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
 	public void updateSuit(Suit suit) {
 		// TODO Auto-generated method stub
-		
+		try {
+			suitDAO.updateObject(suit);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public List<Suit> findAllSuit() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+//	@Override
+//	public List<Suit> findAllSuit() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	
 	// public SuitDAO suitdao;
 	//
 	//

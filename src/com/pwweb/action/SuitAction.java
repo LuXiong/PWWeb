@@ -3,8 +3,9 @@ package com.pwweb.action;
 import java.util.List;
 
 import com.opensymphony.xwork2.ActionSupport;
-import com.pwweb.model.Suit;
-import com.pwweb.service.SuitService;
+import com.pwweb.pojo.Suit;
+import com.pwweb.service.Imp.SuitServiceImp;
+
 
 public class SuitAction extends ActionSupport {
 
@@ -14,7 +15,7 @@ public class SuitAction extends ActionSupport {
 	private static final long serialVersionUID = 7355503326610945820L;
 
 	private Suit suit;
-	private SuitService suitService;
+	private SuitServiceImp suitServiceImp;
 	private List<Suit> suitList;
 	
 	public Suit getSuit() {
@@ -23,11 +24,12 @@ public class SuitAction extends ActionSupport {
 	public void setSuit(Suit suit) {
 		this.suit = suit;
 	}
-	public SuitService getSuitService() {
-		return suitService;
+
+	public SuitServiceImp getSuitServiceImp() {
+		return suitServiceImp;
 	}
-	public void setSuitService(SuitService suitService) {
-		this.suitService = suitService;
+	public void setSuitServiceImp(SuitServiceImp suitServiceImp) {
+		this.suitServiceImp = suitServiceImp;
 	}
 	public List<Suit> getSuitList() {
 		return suitList;
@@ -37,22 +39,22 @@ public class SuitAction extends ActionSupport {
 	}
 	
 	public String ActionDeleteSuit(Suit suit){
-		this.suitService.deleteSuit(suit);
+		this.suitServiceImp.deleteSuit(suit);
 		return SUCCESS;
 	}	
 	
 	public String ActionUpdateSuit(Suit suit){
-		this.suitService.updateSuit(suit);
+		this.suitServiceImp.updateSuit(suit);
 		return SUCCESS;
 	}
 	
 	public String ActionSaveSuit(Suit suit){
-		this.suitService.saveSuit(suit);
+		this.suitServiceImp.saveSuit(suit);
 		return SUCCESS;
 	}
-	
-	public String ActionFindAllSuit(){
-		suitList = this.suitService.findAllSuit();
-		return SUCCESS;
-	}
+//	
+//	public String ActionFindAllSuit(){
+//		suitList = this.suitService.findAllSuit();
+//		return SUCCESS;
+//	}
 }

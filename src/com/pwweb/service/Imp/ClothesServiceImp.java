@@ -2,38 +2,46 @@ package com.pwweb.service.Imp;
 
 import java.util.List;
 
-import com.pwweb.model.Clothes;
-import com.pwweb.service.ClothesService;
+import com.pwweb.pojo.Clothes;
 import com.pwweb.dao.BaseDAO;
 
-public class ClothesServiceImp implements ClothesService {
+public class ClothesServiceImp {
 	
 	public BaseDAO clothesdao;
 
-	@Override
 	public void saveClothes(Clothes clothes) {
 		// TODO Auto-generated method stub
-		
+		try {
+			clothesdao.saveObject(clothes);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
 	public void deleteClothes(Clothes clothes) {
 		// TODO Auto-generated method stub
-		
+		try {
+			clothesdao.deleteObjectById(clothes.getClass(), clothes.getId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
 	public void updateClothes(Clothes clothes) {
 		// TODO Auto-generated method stub
-		
+		try {
+			clothesdao.updateObject(clothes);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public List<Clothes> findAllClothes() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+//	@Override
+//	public List<Clothes> findAllClothes() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+//	
 	
 
 //	public ClothesDAO getClothesdao() {

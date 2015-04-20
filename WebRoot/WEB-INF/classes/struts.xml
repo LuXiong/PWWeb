@@ -11,13 +11,33 @@
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>
-		</action>	
+		</action>
 		<action name="register" class="com.pwweb.action.RegisterAction"
 			method="ActionRegister">
 			<result type="json" name="success">
-			<param name="root">jsonData</param>
+				<param name="root">jsonData</param>
 			</result>
-			</action>
+		</action>
 	</package>
 
+	<package name="user" namespace="/operation" extends="json-default">
+		<action name="delete" class="com.pwweb.action.UserAction"
+			method="ActionDeleteUser">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="update" class="com.pwweb.action.UserAction"
+			method="ActionUpdateUser">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="save" class="com.pwweb.action.UserAction"
+			method="ActionSaveUser">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+	</package>
 </struts>    

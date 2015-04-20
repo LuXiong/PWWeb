@@ -1,6 +1,7 @@
 package com.pwweb.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +31,16 @@ public class User implements Serializable {
 	@Column(name = "password")
 	private String password;
 
+	@Column(name = "phone")
+	private String phone;
+	
+	@Column(name = "avatar")
+	private String avatar;
+	
+	@Column(name = "create_time")
+	private Date create_time;
+	
+	
 	public String getId() {
 		return id;
 	}

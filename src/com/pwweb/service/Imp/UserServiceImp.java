@@ -2,41 +2,51 @@ package com.pwweb.service.Imp;
 
 
 import java.util.List;
+import com.pwweb.dao.BaseDAO;
+import com.pwweb.pojo.User;
 
-import com.pwweb.model.User;
-import com.pwweb.service.UserService;
 
-public class UserServiceImp implements UserService  {
+public class UserServiceImp{
 
-	@Override
+	BaseDAO userDAO = new BaseDAO();
+	
 	public void saveUser(User user) {
-//		BaseD
-
+		try {
+			userDAO.saveObject(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public User queryByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public User queryByUsername(String username) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
-	@Override
 	public void deleteUser(User user) {
 		// TODO Auto-generated method stub
+		try {
+			userDAO.deleteObjectById(userDAO.getClass(), user.getUid());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 
-	@Override
 	public void updateUser(User user) {
 		// TODO Auto-generated method stub
-
+		try {
+			userDAO.updateObject(user);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	@Override
-	public List<User> findAllUser() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public List<User> findAllUser() {
+//		// TODO Auto-generated method stub
+//
+//		return null;
+//	}
 
 	// public UserDAO userdao;
 //	

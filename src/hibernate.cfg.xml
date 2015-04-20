@@ -7,18 +7,29 @@
 <hibernate-configuration>
 
 	<session-factory>
-		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="connection.url">jdbc:mysql://127.0.0.1:3306/pwdb</property>
+		<property name="dialect">
+			org.hibernate.dialect.MySQLDialect
+		</property>
+		<property name="connection.url">
+			jdbc:mysql://127.0.0.1:3306/pwdb
+		</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">123456</property>
-		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="myeclipse.connection.profile">pw_driver</property>
+		<property name="connection.driver_class">
+			com.mysql.jdbc.Driver
+		</property>
+		<property name="myeclipse.connection.profile">
+			pw_driver
+		</property>
 
 		<property name="show_sql">true</property>
 		<!-- 实体类 -->
-		<mapping class="com.pwweb.model.User"
-		></mapping>
-		
+		<mapping class="com.pwweb.model.User"></mapping>
+		<mapping class="com.pwweb.pojo.User" />
+		<mapping class="com.pwweb.pojo.Clothes" />
+		<mapping class="com.pwweb.pojo.Suit" />
+		<mapping class="com.pwweb.pojo.Token" />
+
 	</session-factory>
 
 </hibernate-configuration>
