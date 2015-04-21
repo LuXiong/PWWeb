@@ -21,7 +21,7 @@ public class ClothesServiceImp {
 	public void deleteClothes(Clothes clothes) {
 		// TODO Auto-generated method stub
 		try {
-			clothesdao.deleteObjectById(clothes.getClass(), clothes.getId());
+			clothesdao.deleteObjectById(Clothes.class, clothes.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

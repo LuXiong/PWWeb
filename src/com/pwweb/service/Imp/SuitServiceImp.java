@@ -21,7 +21,7 @@ public class SuitServiceImp{
 	public void deleteSuit(Suit suit) {
 		// TODO Auto-generated method stub
 		try {
-			suitDAO.deleteObjectById(suit.getClass(), suit.getId());
+			suitDAO.deleteObjectById(Suit.class, suit.getId());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

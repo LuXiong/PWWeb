@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2015-04-21 09:27:24
+Date: 2015-04-21 10:02:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -33,10 +33,6 @@ CREATE TABLE `clothes` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of clothes
--- ----------------------------
-
--- ----------------------------
 -- Table structure for message
 -- ----------------------------
 DROP TABLE IF EXISTS `message`;
@@ -46,11 +42,7 @@ CREATE TABLE `message` (
   `content` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
   `time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=227 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of message
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=228 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for share
@@ -66,10 +58,6 @@ CREATE TABLE `share` (
   `favcount` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of share
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for suit
@@ -88,10 +76,6 @@ CREATE TABLE `suit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of suit
--- ----------------------------
-
--- ----------------------------
 -- Table structure for token
 -- ----------------------------
 DROP TABLE IF EXISTS `token`;
@@ -105,11 +89,6 @@ CREATE TABLE `token` (
   `device_id` varchar(255) NOT NULL,
   PRIMARY KEY (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of token
--- ----------------------------
-INSERT INTO `token` VALUES ('PWAU', '0', '2015-04-17 09:20:02', '123456', '13297988492', '2015-04-17 14:55:19', '0');
 
 -- ----------------------------
 -- Table structure for user
@@ -127,7 +106,3 @@ CREATE TABLE `user` (
   `device_id` varchar(255) NOT NULL,
   PRIMARY KEY (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of user
--- ----------------------------

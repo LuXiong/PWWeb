@@ -28,7 +28,7 @@
 		</action>
 
 	</package>
-	<package name="user" namespace="/operation" extends="json-default">
+	<package name="user" namespace="/user" extends="json-default">
 		<action name="delete" class="com.pwweb.action.UserAction"
 			method="ActionDeleteUser">
 			<result type="json" name="success">
@@ -41,7 +41,48 @@
 				<param name="root">jsonData</param>
 			</result>
 		</action>
-		<action name="save" class="com.pwweb.action.UserAction" method="ActionSaveUser">
+		<action name="save" class="com.pwweb.action.UserAction" 
+		    method="ActionSaveUser">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+	</package>
+		<package name="clothes" namespace="/clothes" extends="json-default">
+		<action name="delete" class="com.pwweb.action.ClothesAction"
+			method="ActionDeleteClothes">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="update" class="com.pwweb.action.ClothesAction"
+			method="ActionUpdateClothes">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="save" class="com.pwweb.action.ClothesAction" 
+		    method="ActionSaveClothes">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+	</package>
+	<package name="suit" namespace="/suit" extends="json-default">
+		<action name="delete" class="com.pwweb.action.SuitAction"
+			method="ActionDeleteSuit">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="update" class="com.pwweb.action.SuitAction"
+			method="ActionUpdateSuit">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="save" class="com.pwweb.action.SuitAction" 
+		    method=" ActionSaveSuit">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>
