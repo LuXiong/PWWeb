@@ -7,7 +7,9 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class BaseDAO {
@@ -16,7 +18,11 @@ public class BaseDAO {
 	 * @param entity
 	 */
 	public void saveObject(Object entity) throws Exception {
-		SessionDAO.getSession().save(entity);
+		Session session = SessionDAO.getSession();
+		Transaction tx = session.beginTransaction();
+		session.save(entity);
+		tx.commit();
+		SessionDAO.closeSession();
 	}
 
 	/**
@@ -52,6 +58,22 @@ public class BaseDAO {
 		Criteria c = SessionDAO.getSession().createCriteria(entityClass);
 		for (int i = 0; i < res.size(); i++) {
 			c.add(res.get(i));
+		}
+		return c.list();
+	}
+
+	public Object findObjectByCriteria(Class<?> entityClass,
+			ArrayList<Criterion> res, ArrayList<Order> orders) {
+		Criteria c = SessionDAO.getSession().createCriteria(entityClass);
+		if (res != null) {
+			for (int i = 0; i < res.size(); i++) {
+				c.add(res.get(i));
+			}
+		}
+		if (orders != null) {
+			for (int i = 0; i < orders.size(); i++) {
+				c.addOrder(orders.get(i));
+			}
 		}
 		return c.list();
 	}
@@ -158,6 +180,6 @@ public class BaseDAO {
 
 	public void saveUser() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

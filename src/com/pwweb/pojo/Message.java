@@ -1,7 +1,12 @@
 package com.pwweb.pojo;
 
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+import static javax.persistence.GenerationType.IDENTITY;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,9 +19,14 @@ public class Message implements java.io.Serializable {
 
 	// Fields
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7864950067724360387L;
 	private Integer id;
 	private String topic;
 	private String content;
+	private Date time;
 
 	// Constructors
 
@@ -25,14 +35,15 @@ public class Message implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Message(Integer id, String topic, String content) {
-		this.id = id;
+	public Message(String topic, String content, Date time) {
 		this.topic = topic;
 		this.content = content;
+		this.time = time;
 	}
 
 	// Property accessors
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", unique = true, nullable = false)
 	public Integer getId() {
 		return this.id;
@@ -58,6 +69,15 @@ public class Message implements java.io.Serializable {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	@Column(name = "time", nullable = false, length = 19)
+	public Date getTime() {
+		return this.time;
+	}
+
+	public void setTime(Date time) {
+		this.time = time;
 	}
 
 }
