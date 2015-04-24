@@ -12,5 +12,5 @@ public class SessionDAO {
 	public static void closeSession(){
 		HibernateSessionFactory.closeSession();
 	}
-
+	
 }

@@ -4,7 +4,11 @@ import javax.persistence.Entity;
 
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
+/**
+ * 
+ * @author Dean
+ * 
+ */
 @Entity
 public class Constant {
 	public final static String SUCCESS = "success";

@@ -8,7 +8,7 @@
 
 	<session-factory>
 		<property name="dialect">
-			org.hibernate.dialect.MySQLDialect
+			org.hibernate.dialect.MySQL5InnoDBDialect
 		</property>
 		<property name="connection.url">
 			jdbc:mysql://127.0.0.1:3306/pwdb
