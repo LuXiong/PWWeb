@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import net.sf.json.JSONObject;
+
 /**
  * Token entity. @author MyEclipse Persistence Tools
  */
@@ -104,6 +106,15 @@ public class Token implements java.io.Serializable {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	public String subJson() {
+		JSONObject result = new JSONObject();
+		result.put("token", token);
+		result.put("deviceId", deviceId);
+		result.put("createTime", createTime.getTime());
+		result.put("lastUse", createTime.getTime());
+		return result.toString();
 	}
 
 }

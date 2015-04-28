@@ -2,7 +2,8 @@ package com.pwweb.service;
 
 import java.util.List;
 
-import com.pwweb.model.Suit;
+import com.pwweb.pojo.Suit;
+
 
 public interface SuitService {
 

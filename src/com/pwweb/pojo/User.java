@@ -1,10 +1,13 @@
 package com.pwweb.pojo;
 
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import net.sf.json.JSONObject;
 
 /**
  * User entity. @author MyEclipse Persistence Tools
@@ -39,8 +42,8 @@ public class User implements java.io.Serializable {
 		this.gender = gender;
 		this.password = password;
 		this.phone = phone;
-//		this.createTime = createTime;
-//		this.lastUse = lastUse;
+		// this.createTime = createTime;
+		// this.lastUse = lastUse;
 		this.deviceId = deviceId;
 	}
 
@@ -115,7 +118,7 @@ public class User implements java.io.Serializable {
 		this.avatar = avatar;
 	}
 
-	@Column(name = "create_time",length = 19)
+	@Column(name = "create_time", length = 19)
 	public Date getCreateTime() {
 		return this.createTime;
 	}
@@ -124,7 +127,7 @@ public class User implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "last_use",length = 19)
+	@Column(name = "last_use", length = 19)
 	public Date getLastUse() {
 		return this.lastUse;
 	}
@@ -140,6 +143,21 @@ public class User implements java.io.Serializable {
 
 	public void setDeviceId(String deviceId) {
 		this.deviceId = deviceId;
+	}
+
+	public String subJson() {
+		JSONObject result = new JSONObject();
+		result.put("uid", uid);
+		result.put("name", name);
+		result.put("gender", gender);
+		result.put("password", password);
+		result.put("phone", phone);
+		result.put("deviceId", deviceId);
+		result.put("avatar", avatar);
+		result.put("createTime", createTime.getTime());
+		result.put("lastUse", createTime.getTime());
+		System.out.println(result.toString());
+		return result.toString();
 	}
 
 }

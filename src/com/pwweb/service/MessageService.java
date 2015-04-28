@@ -26,7 +26,7 @@ public class MessageService {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			listener.onFailure();
+			listener.onFailure("can not create message");
 		}
 		listener.onFinish();
 		return Constant.SUCCESS;

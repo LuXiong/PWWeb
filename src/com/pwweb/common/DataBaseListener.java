@@ -9,7 +9,7 @@ public class DataBaseListener<T> {
 	public void onStart(){
 		
 	}
-	public void onFailure(){
+	public void onFailure(String reason){
 		
 	}
 	public void onSuccess(ArrayList<T> list){

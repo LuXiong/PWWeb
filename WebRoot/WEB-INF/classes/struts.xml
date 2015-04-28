@@ -6,14 +6,14 @@
 
 
 	<package name="apis" namespace="/pass" extends="json-default">
-		<action name="login" class="com.pwweb.action.LoginAction"
-			method="ActionLogin">
+		<action name="login" class="com.pwweb.action.PassAction"
+			method="login">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>
 		</action>
-		<action name="register" class="com.pwweb.action.RegisterAction"
-			method="ActionRegister">
+		<action name="regist" class="com.pwweb.action.PassAction"
+			method="regist">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>
