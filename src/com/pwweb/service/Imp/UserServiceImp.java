@@ -2,6 +2,8 @@ package com.pwweb.service.Imp;
 
 
 import java.util.List;
+
+import com.pwweb.common.DataBaseListener;
 import com.pwweb.dao.BaseDAO;
 import com.pwweb.pojo.User;
 
@@ -23,24 +25,34 @@ public class UserServiceImp{
 //		return null;
 //	}
 
-	public void deleteUser(User user) {
+	public void deleteUser(String uid,DataBaseListener<User> listener) {
 		// TODO Auto-generated method stub
+		listener.onStart();
+		BaseDAO deleteDAO = new BaseDAO();
 		try {
-			userDAO.deleteObjectById(userDAO.getClass(), user.getUid());
+			deleteDAO.deleteObjectById(User.class, uid);
+//			System.out.println("delete user successfully");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+        listener.onFinish();
 	}
 
-	public void updateUser(User user) {
+	public void updateUser(User user,String name,String avatar,DataBaseListener<User>listener) {
 		// TODO Auto-generated method stub
+		listener.onStart();
+		BaseDAO updateDAO = new BaseDAO();
+		user.setName(name);
+		user.setAvatar(avatar);
 		try {
-			userDAO.updateObject(user);
+			updateDAO.updateObject(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		listener.onFinish();
 	}
+
+
 
 //	public List<User> findAllUser() {
 //		// TODO Auto-generated method stub

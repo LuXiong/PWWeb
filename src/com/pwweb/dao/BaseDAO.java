@@ -33,7 +33,10 @@ public class BaseDAO {
 	public void deleteObjectById(Class<?> entityClass, Serializable entityId)
 			throws Exception {
 		Session session = SessionDAO.getSession();
+		Transaction tx = session.beginTransaction();
 		session.delete(session.load(entityClass, entityId));
+		tx.commit();
+		SessionDAO.closeSession();
 	}
 
 	/**
@@ -83,7 +86,9 @@ public class BaseDAO {
 	 * @param entity
 	 */
 	public void updateObject(Object entity) throws Exception {
+		Transaction tx = SessionDAO.getSession().beginTransaction();
 		SessionDAO.getSession().update(entity);
+		tx.commit();
 	}
 
 	/**

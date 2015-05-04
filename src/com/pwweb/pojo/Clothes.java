@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import net.sf.json.JSONObject;
+
 /**
  * Clothes entity. @author MyEclipse Persistence Tools
  */
@@ -139,6 +141,21 @@ public class Clothes implements java.io.Serializable {
 
 	public void setSuits(String suits) {
 		this.suits = suits;
+	}
+	
+	public String subJson() {
+		JSONObject result = new JSONObject();
+		result.put("id", id);
+		result.put("user_id", userId);
+		result.put("color", color);
+		result.put("category", category);
+		result.put("exponent", exponent);
+		result.put("create_time", createTime.getTime());
+		result.put("last_edit", lastEdit.getTime());
+		result.put("img", img);
+		result.put("suits", suits);
+		System.out.println(result.toString());
+		return result.toString();
 	}
 
 }

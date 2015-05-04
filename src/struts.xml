@@ -48,7 +48,7 @@
 			</result>
 		</action>
 	</package>
-		<package name="clothes" namespace="/clothes" extends="json-default">
+	<package name="clothes" namespace="/clothes" extends="json-default">
 		<action name="delete" class="com.pwweb.action.ClothesAction"
 			method="ActionDeleteClothes">
 			<result type="json" name="success">
@@ -61,8 +61,14 @@
 				<param name="root">jsonData</param>
 			</result>
 		</action>
-		<action name="save" class="com.pwweb.action.ClothesAction" 
-		    method="ActionSaveClothes">
+		<action name="add" class="com.pwweb.action.ClothesAction"
+			method="ActionAddClothes">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="queryById" class="com.pwweb.action.ClothesAction"
+			method="ActionQueryClothesById">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>
@@ -81,8 +87,8 @@
 				<param name="root">jsonData</param>
 			</result>
 		</action>
-		<action name="save" class="com.pwweb.action.SuitAction" 
-		    method=" ActionSaveSuit">
+		<action name="add" class="com.pwweb.action.SuitAction" 
+		    method=" ActionAddSuit">
 			<result type="json" name="success">
 				<param name="root">jsonData</param>
 			</result>

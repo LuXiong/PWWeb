@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import net.sf.json.JSONObject;
+
 /**
  * Suit entity. @author MyEclipse Persistence Tools
  */
@@ -125,4 +127,17 @@ public class Suit implements java.io.Serializable {
 		this.lastEdit = lastEdit;
 	}
 
+	public String subJson() {
+		JSONObject result = new JSONObject();
+		result.put("id", id);
+		result.put("user_id", userId);
+		result.put("weather", weather);
+		result.put("clothes", clothes);
+		result.put("occasion", occasion);
+		result.put("create_time", createTime.getTime());
+		result.put("last_edit", lastEdit.getTime());
+		result.put("img", img);
+		System.out.println(result.toString());
+		return result.toString();
+	}
 }

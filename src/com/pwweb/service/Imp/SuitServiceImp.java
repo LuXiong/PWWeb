@@ -1,8 +1,13 @@
 package com.pwweb.service.Imp;
 
+import java.util.Date;
 import java.util.List;
 
+import com.pwweb.common.Constant;
+import com.pwweb.common.DataBaseListener;
+import com.pwweb.common.Utils;
 import com.pwweb.dao.BaseDAO;
+import com.pwweb.pojo.Clothes;
 import com.pwweb.pojo.Suit;
 
 public class SuitServiceImp{
@@ -18,13 +23,34 @@ public class SuitServiceImp{
 		
 	}
 
-	public void deleteSuit(Suit suit) {
+	public String addSuit(String img,int weather,int ocassion,DataBaseListener<Suit> listener){
+		listener.onStart();
+		BaseDAO addDAO = new BaseDAO();
+		Date date = new Date(System.currentTimeMillis());
+		String id = Utils.generateUUid();
+		String userId = id;
+		String clothes= "123";
+		Suit suit = new Suit(id,userId,img,clothes,weather,ocassion,date,date);
+		
+		try{
+			addDAO.saveObject(suit);
+			listener.onSuccess(suit);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		listener.onFinish();
+		return Constant.SUCCESS;
+	}
+	public void deleteSuit(String id,DataBaseListener<Suit> listener) {
 		// TODO Auto-generated method stub
+		listener.onStart();
+		BaseDAO deleteDAO = new BaseDAO();
 		try {
-			suitDAO.deleteObjectById(Suit.class, suit.getId());
+			deleteDAO.deleteObjectById(Suit.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		listener.onFinish();
 	}
 
 	public void updateSuit(Suit suit) {

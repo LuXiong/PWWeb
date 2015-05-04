@@ -138,15 +138,15 @@ public class PassAction extends ActionSupport {
 	}
 
 	public String ActionLogin() {
-		jsonData = new HashMap<String, String>();
-		PassService ps = new PassService();
-		String result = ps.login(getUid()(), getPassword());
-		if (result.equals(Constant.FAILURE)) {
-			jsonData.put("code", "-1");
-		} else {
-			jsonData.put("access_token", result);
-		}
-		arrayData.add(jsonData);
+//		jsonData = new HashMap<String, String>();
+//		PassService ps = new PassService();
+//		String result = ps.login(getUid()(), getPassword());
+//		if (result.equals(Constant.FAILURE)) {
+//			jsonData.put("code", "-1");
+//		} else {
+//			jsonData.put("access_token", result);
+//		}
+//		arrayData.add(jsonData);
 		return SUCCESS;
 	}
 
