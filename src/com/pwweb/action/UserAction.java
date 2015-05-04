@@ -36,7 +36,7 @@ public class UserAction extends ActionSupport {
 	private UserServiceImp userServiceImp;
 	private List<User> userList;
 
-	private HashMap<String, Object> jsonData;
+	private HashMap<String, String> jsonData;
 	private ArrayList<HashMap<String, Object>> arrayData;
 
 	
@@ -136,13 +136,7 @@ public class UserAction extends ActionSupport {
 		this.userList = userList;
 	}
 
-	public HashMap<String, Object> getJsonData() {
-		return jsonData;
-	}
 
-	public void setJsonData(HashMap<String, Object> jsonData) {
-		this.jsonData = jsonData;
-	}
 
 	public ArrayList<HashMap<String, Object>> getArrayData() {
 		return arrayData;
@@ -167,8 +161,6 @@ public class UserAction extends ActionSupport {
 			}
 		});
 		return SUCCESS;
-//		this.userServiceImp.deleteUser(this.user);
-//		return SUCCESS;
 	}
 /**
  * 每次update就相当于把值重新输入改变下，但是有部分参数不能进行修改
@@ -176,15 +168,15 @@ public class UserAction extends ActionSupport {
  * @return
  */
 	public String ActionUpdateUser() {
+		jsonData = new HashMap<String,String>();
 		final UserServiceImp us = new UserServiceImp();
-		us.updateUser(user,name,avatar,new DataBaseListener<User>(){
+		us.updateUser(uid,name,avatar,new DataBaseListener<User>(){
 			public void onSuccess(User user){
 				if(user!=null){
-					
+					jsonData.put("user", user.subJson());
 				}
 			}
 		});
-//		this.userServiceImp.updateUser(this.user);
 		return SUCCESS;
 	}
 

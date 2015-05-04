@@ -34,6 +34,7 @@ public class SuitAction extends ActionSupport {
 	private List<Suit> suitList;
 	
 	private HashMap<String, String> jsonData;
+	private HashMap<String, Object> jsonResult;
 	private ArrayList<HashMap<String, Object>> arrayData;
 	
 	
@@ -130,8 +131,17 @@ public class SuitAction extends ActionSupport {
 		return SUCCESS;
 	}	
 	
-	public String ActionUpdateSuit(Suit suit){
-		this.suitServiceImp.updateSuit(suit);
+	public String ActionUpdateSuit(){
+//		this.suitServiceImp.updateSuit(suit);
+		jsonData  = new HashMap<String,String>();
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.updateSuit(id,weather,occasion,new DataBaseListener<Suit>(){
+			public void onSuccess(Suit suit){
+				if(suit != null){
+					jsonData.put("suit", suit.subJson());
+				}
+			}
+		});
 		return SUCCESS;
 	}
 	
@@ -143,7 +153,7 @@ public class SuitAction extends ActionSupport {
 	public String ActionAddSuit(){
 		jsonData = new HashMap<String,String>();
 		final SuitServiceImp ss = new SuitServiceImp();
-		ss.addSuit(img,weather,occasion,new DataBaseListener<Suit>(){
+		ss.addSuit(userId,img,weather,occasion,new DataBaseListener<Suit>(){
 			public void onSuccess(Suit suit){
 				if(suit!=null){
 					jsonData.put("suit", suit.subJson());
@@ -152,9 +162,32 @@ public class SuitAction extends ActionSupport {
 		});
 		return SUCCESS;
 	}
-//	
-//	public String ActionFindAllSuit(){
-//		suitList = this.suitService.findAllSuit();
-//		return SUCCESS;
-//	}
+	
+	public String ActionQuerySuitById(){
+		jsonData = new HashMap<String,String>();
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.QuerySuitById(id, new DataBaseListener<Suit>(){
+			public void onSuccess(Suit suit){
+				if(suit != null){
+					jsonData.put("suit", suit.subJson());
+				}
+			}
+		});
+		return SUCCESS;
+	}
+	
+	public String ActionFindAllSuit(){
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.findAllSuit(userId,new DataBaseListener<Suit>(){
+			public void onSuccess(Suit suit){
+				if(suit != null){
+					jsonResult.put("suit", suit.subJson());
+//					clothesList.add(index, element);
+				}
+			}
+		});
+//		clothesList.addAll(jsonResult);
+		return SUCCESS;
+	}
+
 }

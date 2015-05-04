@@ -35,9 +35,18 @@ public class ClothesAction extends ActionSupport{
 	private List<Clothes> clothesList;
 	
 	private HashMap<String, String> jsonData;
+	
+	private HashMap<String,Object> jsonResult;
 	private ArrayList<HashMap<String, Object>> arrayData;
 	
 	
+	
+	public HashMap<String, Object> getJsonResult() {
+		return jsonResult;
+	}
+	public void setJsonResult(HashMap<String, Object> jsonResult) {
+		this.jsonResult = jsonResult;
+	}
 	public HashMap<String, String> getJsonData(){
 		return jsonData;
 	}
@@ -143,15 +152,24 @@ public class ClothesAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
-	public String ActionUpdateClothes(Clothes clothes){
-		this.clothesServiceImp.updateClothes(clothes);
+	public String ActionUpdateClothes(){
+		jsonData =  new HashMap<String,String>();
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.updateClothes(id,color,category,img,new DataBaseListener<Clothes>(){
+			public void onSuccess(Clothes clothes){
+				if(clothes!=null){
+					jsonData.put("clothes",clothes.subJson());
+				}
+			}
+		});
+		
 		return SUCCESS;
 	}
 	
 	public String ActionAddClothes(){
 		jsonData = new HashMap<String,String>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.addClothes(color,category,img,new DataBaseListener<Clothes>(){
+		cs.addClothes(userId,color,category,img,new DataBaseListener<Clothes>(){
 			public void onSuccess(Clothes clothes){
 				if(clothes!=null){
 					jsonData.put("clothes", clothes.subJson());
@@ -177,9 +195,34 @@ public class ClothesAction extends ActionSupport{
 		});
 		return SUCCESS;
 	}
-//	public String ActionFindAllClothes(){
-//		clothesList = this.clothesService.findAllClothes();
-//		return SUCCESS;
-//	}
+	
+	public String ActionQueryClothesByPage(){
+		arrayData = new ArrayList<HashMap<String,Object>>();
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.queryClothesById(id,new DataBaseListener<Clothes>(){
+			public void onSuccess(Clothes clothes){
+				if(clothes!=null){
+					jsonData.put("clothes", clothes.subJson());
+				}
+			}
+		});
+		arrayData.add(jsonResult);
+//		cs.queryClothesByPage();
+		return SUCCESS;
+	}
+	
+	public String ActionFindAllClothes(){
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.findAllClothes(userId,new DataBaseListener<Clothes>(){
+			public void onSuccess(Clothes clothes){
+				if(clothes != null){
+					jsonResult.put("clothes", clothes.subJson());
+//					clothesList.add(index, element);
+				}
+			}
+		});
+//		clothesList.addAll(jsonResult);
+		return SUCCESS;
+	}
  }
 

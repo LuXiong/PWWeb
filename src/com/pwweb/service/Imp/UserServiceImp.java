@@ -1,6 +1,7 @@
 package com.pwweb.service.Imp;
 
 
+import java.util.Date;
 import java.util.List;
 
 import com.pwweb.common.DataBaseListener;
@@ -38,14 +39,29 @@ public class UserServiceImp{
         listener.onFinish();
 	}
 
-	public void updateUser(User user,String name,String avatar,DataBaseListener<User>listener) {
+	public void updateUser(String id,String name,String avatar,DataBaseListener<User>listener) {
 		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO updateDAO = new BaseDAO();
-		user.setName(name);
-		user.setAvatar(avatar);
+ 
+		User u = (User)updateDAO.findObjectById(User.class, id);
+		if(name == null){
+			u.setName(u.getName());
+		}else{
+			u.setName(name);
+		}
+		
+		if(avatar == null){
+			u.setAvatar(u.getAvatar());
+		}else{
+			u.setAvatar(avatar);
+		}
+		  
+		Date date = new Date(System.currentTimeMillis());
+	    u.setLastUse(date); 
 		try {
-			updateDAO.updateObject(user);
+			updateDAO.updateObject(u);
+			listener.onSuccess(u);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

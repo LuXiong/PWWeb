@@ -18,4 +18,7 @@ public class Constant {
 	public final static String broker = "tcp://xlook315.eicp.net:39099";//"tcp://127.0.0.1:1883";
 	public final static String clientId = "JavaSample";
 	public final static MemoryPersistence persistence = new MemoryPersistence();
+	public final static String CoolColor = "cool color";
+	public final static String NeutralColor = "neutral color";
+	public final static String WarmColor = "warm color";
 }
