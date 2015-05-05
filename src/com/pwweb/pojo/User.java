@@ -156,7 +156,6 @@ public class User implements java.io.Serializable {
 		result.put("avatar", avatar);
 		result.put("createTime", createTime.getTime());
 		result.put("lastUse", createTime.getTime());
-		System.out.println(result.toString());
 		return result.toString();
 	}
 
