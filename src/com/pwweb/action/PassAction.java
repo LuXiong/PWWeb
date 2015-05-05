@@ -138,14 +138,17 @@ public class PassAction extends ActionSupport {
 	}
 
 	public String ActionLogin() {
-//		jsonData = new HashMap<String, String>();
-//		PassService ps = new PassService();
-//		String result = ps.login(getUid()(), getPassword());
-//		if (result.equals(Constant.FAILURE)) {
-//			jsonData.put("code", "-1");
-//		} else {
-//			jsonData.put("access_token", result);
-//		}
+		jsonData = new HashMap<String, String>();
+		PassService ps = new PassService();
+		final String result = ps.login(getPhone(), getPassword(),
+				new DataBaseListener<User>() {
+					public void onSuccess(User user) {
+						if(user!=null){
+							jsonData.put("user", user.subJson());
+						}
+					}
+				});
+	
 //		arrayData.add(jsonData);
 		return SUCCESS;
 	}

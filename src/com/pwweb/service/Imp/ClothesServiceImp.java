@@ -177,8 +177,17 @@ public class ClothesServiceImp {
 		return clothesList;
 	}
 	
-	public List<Clothes> queryClothesByKey(String userId){
-		return null;
+	public List<Clothes> queryClothesByKey(String userId,DataBaseListener<Clothes> listener){
+		listener.onStart();
+		BaseDAO queryClothesByKeyDAO = new BaseDAO();
+		List<Clothes> clothesList = new ArrayList<Clothes>();
+		try{
+//			queryClothesByKeyDAO.findSingletonResultByHql(hql, values);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
+		return clothesList;
 	}
 
 //	public ClothesDAO getClothesdao() {

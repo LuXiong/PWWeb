@@ -190,8 +190,5 @@ public class BaseDAO {
 		return query.list();
 	}
 
-	public void saveUser() {
-		// TODO Auto-generated method stub
 
-	}
 }
