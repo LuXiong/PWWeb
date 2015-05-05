@@ -3,6 +3,8 @@ package com.pwweb.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 import org.hibernate.Criteria;
@@ -53,6 +55,11 @@ public class PassService {
 					date, date, deviceId);
 			Token token = new Token(Utils.generateUUid(), uid, date, password,
 					phone, date, deviceId);
+		if(avatar==null){
+			avatar="45666";
+		}
+        if(isRightPassword(password)&&isPhoneNum(phone)&&(avatar!=null))
+        {
 
 			try {
 				registDAO.saveObject(user);
@@ -65,9 +72,9 @@ public class PassService {
 			}
 			listener.onFinish();
 		} else {
-			listener.onFailure("user exist");
+			listener.onFailure("user exist or illegal input");
 		}
-
+		}
 		return Constant.SUCCESS;
 
 	}
@@ -115,4 +122,39 @@ public class PassService {
 		}
 		return user;
 	}
+	
+	/**
+	 * 使用正则表达式判断手机号码是否符合规范
+	 * @param phone
+	 * @return
+	 */
+	public boolean isPhoneNum(String phone){
+		Pattern pMobile = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");  //中国移动号码
+		Pattern pCM = Pattern.compile("^1(34[0-8]|(3[5-9]|5[017-9]|8[278])\\d)\\d{7}$");    //中国联通号码
+		Pattern pCU = Pattern.compile("^1(3[0-2]|5[256]|8[56])\\d{8}$");                    //中国电信号码
+		Matcher mMobile = pMobile.matcher(phone);
+		Matcher mCM = pCM.matcher(phone); 
+		Matcher mCU = pCU.matcher(phone); 
+		
+		if(mMobile.matches()||mCM.matches()||mCU.matches()){
+			return true;
+		}else{
+			System.out.println("手机号码为非法格式，请重新输入");
+			return false;
+		} 
+	}
+	/**
+	 * 密码格式检查
+	 * @param password
+	 * @return
+	 */
+	public boolean isRightPassword(String password){
+		if((password.length()<16)&&(password.length()>6)){
+			return true;
+		}else{
+		    System.out.println("password的位数请位于6-16之间");
+			return false;
+		}
+	}
+
 }

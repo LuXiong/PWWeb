@@ -33,7 +33,10 @@ public class BaseDAO {
 	public void deleteObjectById(Class<?> entityClass, Serializable entityId)
 			throws Exception {
 		Session session = SessionDAO.getSession();
+		Transaction tx = session.beginTransaction();
 		session.delete(session.load(entityClass, entityId));
+		tx.commit();
+		SessionDAO.closeSession();
 	}
 
 	/**
@@ -43,7 +46,8 @@ public class BaseDAO {
 	 * @return 对象有可能为空，有可能不为空
 	 */
 	public Object findObjectById(Class<?> entityClass, Serializable entityId) {
-		return SessionDAO.getSession().get(entityClass, entityId);
+	
+	   return SessionDAO.getSession().get(entityClass, entityId);
 
 	}
 
@@ -83,7 +87,15 @@ public class BaseDAO {
 	 * @param entity
 	 */
 	public void updateObject(Object entity) throws Exception {
+		Transaction tx = SessionDAO.getSession().beginTransaction();
 		SessionDAO.getSession().update(entity);
+		tx.commit();
+		
+//		Session session = SessionDAO.getSession();
+//		Transaction tx = session.beginTransaction();
+//		session.update(entity);
+//		tx.commit();
+//		SessionDAO.closeSession();
 	}
 
 	/**
@@ -178,8 +190,5 @@ public class BaseDAO {
 		return query.list();
 	}
 
-	public void saveUser() {
-		// TODO Auto-generated method stub
 
-	}
 }
