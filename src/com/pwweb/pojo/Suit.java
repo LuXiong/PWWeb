@@ -3,6 +3,7 @@ package com.pwweb.pojo;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -25,6 +26,7 @@ public class Suit implements java.io.Serializable {
 	private Integer occasion;
 	private Date createTime;
 	private Date lastEdit;
+	private String description;
 
 	// Constructors
 
@@ -33,16 +35,16 @@ public class Suit implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Suit(String id, String userId, Date createTime, Date lastEdit) {
-		this.id = id;
+	public Suit(String userId, Date createTime, Date lastEdit) {
 		this.userId = userId;
 		this.createTime = createTime;
 		this.lastEdit = lastEdit;
 	}
 
-	/** full constructor */
-	public Suit(String id, String userId, String img, String clothes,
-			Integer weather, Integer occasion, Date createTime, Date lastEdit) {
+	/** full constructor 
+	 * @param clothes2 */
+	public Suit(String id,String userId, String img, String clothes, Integer weather,
+			Integer occasion, Date createTime, Date lastEdit, String description) {
 		this.id = id;
 		this.userId = userId;
 		this.img = img;
@@ -51,10 +53,12 @@ public class Suit implements java.io.Serializable {
 		this.occasion = occasion;
 		this.createTime = createTime;
 		this.lastEdit = lastEdit;
+		this.description = description;
 	}
 
 	// Property accessors
 	@Id
+	@GeneratedValue
 	@Column(name = "id", unique = true, nullable = false)
 	public String getId() {
 		return this.id;
@@ -127,17 +131,28 @@ public class Suit implements java.io.Serializable {
 		this.lastEdit = lastEdit;
 	}
 
+	@Column(name = "description")
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	public String subJson() {
 		JSONObject result = new JSONObject();
 		result.put("id", id);
 		result.put("user_id", userId);
 		result.put("weather", weather);
-		result.put("clothes", clothes);
 		result.put("occasion", occasion);
 		result.put("create_time", createTime.getTime());
 		result.put("last_edit", lastEdit.getTime());
 		result.put("img", img);
+		result.put("clothes", clothes);
+		result.put("description", description);
 		System.out.println(result.toString());
 		return result.toString();
 	}
+
 }

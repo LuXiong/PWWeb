@@ -3,6 +3,7 @@ package com.pwweb.pojo;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -26,6 +27,7 @@ public class Clothes implements java.io.Serializable {
 	private Date lastEdit;
 	private String img;
 	private String suits;
+	private String description;
 
 	// Constructors
 
@@ -34,9 +36,8 @@ public class Clothes implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public Clothes(String id, String userId, Integer color, Integer category,
+	public Clothes(String userId, Integer color, Integer category,
 			Integer exponent, Date createTime, Date lastEdit) {
-		this.id = id;
 		this.userId = userId;
 		this.color = color;
 		this.category = category;
@@ -46,9 +47,9 @@ public class Clothes implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Clothes(String id, String userId, Integer color, Integer category,
+	public Clothes(String id,String userId, Integer color, Integer category,
 			Integer exponent, Date createTime, Date lastEdit, String img,
-			String suits) {
+			String suits, String description) {
 		this.id = id;
 		this.userId = userId;
 		this.color = color;
@@ -58,10 +59,12 @@ public class Clothes implements java.io.Serializable {
 		this.lastEdit = lastEdit;
 		this.img = img;
 		this.suits = suits;
+		this.description = description;
 	}
 
 	// Property accessors
 	@Id
+	@GeneratedValue
 	@Column(name = "id", unique = true, nullable = false)
 	public String getId() {
 		return this.id;
@@ -142,6 +145,15 @@ public class Clothes implements java.io.Serializable {
 	public void setSuits(String suits) {
 		this.suits = suits;
 	}
+
+	@Column(name = "description")
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	public String subJson() {
 		JSONObject result = new JSONObject();
@@ -154,6 +166,7 @@ public class Clothes implements java.io.Serializable {
 		result.put("last_edit", lastEdit.getTime());
 		result.put("img", img);
 		result.put("suits", suits);
+		result.put("description", description);
 		System.out.println(result.toString());
 		return result.toString();
 	}

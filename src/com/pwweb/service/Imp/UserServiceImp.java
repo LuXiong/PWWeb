@@ -7,10 +7,14 @@ import java.util.List;
 import com.pwweb.common.DataBaseListener;
 import com.pwweb.dao.BaseDAO;
 import com.pwweb.pojo.User;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 
+@Entity
 public class UserServiceImp{
 
+	@ManyToOne
 	BaseDAO userDAO = new BaseDAO();
 	
 	public void saveUser(User user) {

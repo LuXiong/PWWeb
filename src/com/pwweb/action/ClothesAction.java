@@ -8,16 +8,23 @@ import java.util.List;
 import com.opensymphony.xwork2.ActionSupport;
 import com.pwweb.common.DataBaseListener;
 import com.pwweb.pojo.Clothes;
-import com.pwweb.pojo.Token;
-import com.pwweb.pojo.User;
-import com.pwweb.service.PassService;
+import com.pwweb.pojo.ClothesType;
 import com.pwweb.service.Imp.ClothesServiceImp;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
+
+@Entity
 public class ClothesAction extends ActionSupport{
 
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue
 	private static final long serialVersionUID = 8690763859731566034L;
 
 	private String id;
@@ -29,18 +36,72 @@ public class ClothesAction extends ActionSupport{
 	private Date lastEdit;
 	private String img;
 	private String suits;
+	private String description;
 	
+	public int page;
+	public int pageIndex;
+	public String keyWord;
+	
+	@ManyToOne
 	private Clothes clothes;
+	@ManyToOne
 	private ClothesServiceImp clothesServiceImp;
+	@OneToMany
 	private List<Clothes> clothesList;
+	private ArrayList<ClothesType> clothesTypeList;
+	
+	private ClothesType clothesType;
 	
 	private HashMap<String, String> jsonData;
 	
 	private HashMap<String,Object> jsonResult;
 	private ArrayList<HashMap<String, Object>> arrayData;
+	private ArrayList<ClothesType> arrayDataT;
 	
 	
 	
+	public int getPageIndex() {
+		return pageIndex;
+	}
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+	public ArrayList<ClothesType> getArrayDataT() {
+		return arrayDataT;
+	}
+	public void setArrayDataT(ArrayList<ClothesType> arrayDataT) {
+		this.arrayDataT = arrayDataT;
+	}
+	public ArrayList<ClothesType> getClothesTypeList() {
+		return clothesTypeList;
+	}
+	public void setClothesTypeList(ArrayList<ClothesType> clothesTypeList) {
+		this.clothesTypeList = clothesTypeList;
+	}
+	public ClothesType getClothesType() {
+		return clothesType;
+	}
+	public void setClothesType(ClothesType clothesType) {
+		this.clothesType = clothesType;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public String getKeyWord() {
+		return keyWord;
+	}
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
 	public HashMap<String, Object> getJsonResult() {
 		return jsonResult;
 	}
@@ -169,7 +230,7 @@ public class ClothesAction extends ActionSupport{
 	public String ActionAddClothes(){
 		jsonData = new HashMap<String,String>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.addClothes(userId,color,category,img,new DataBaseListener<Clothes>(){
+		cs.addClothes(userId,color,category,img,description,new DataBaseListener<Clothes>(){
 			public void onSuccess(Clothes clothes){
 				if(clothes!=null){
 					jsonData.put("clothes", clothes.subJson());
@@ -211,17 +272,69 @@ public class ClothesAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
-	public String ActionFindAllClothes(){
+//	public String ActionFindAllClothes(){
+//		final ClothesServiceImp cs = new ClothesServiceImp();
+//		cs.findAllClothes(userId,new DataBaseListener<Clothes>(){
+//			public void onSuccess(Clothes clothes){
+//				if(clothes != null){
+//					jsonResult.put("clothes", clothes.subJson());
+////					clothesList.add(index, element);
+//				}
+//			}
+//		});
+//		clothesList.addAll(jsonResult);
+//		return SUCCESS;
+//	}
+	
+	public String ActionQueryClothesByUserId(){
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.findAllClothes(userId,new DataBaseListener<Clothes>(){
-			public void onSuccess(Clothes clothes){
-				if(clothes != null){
-					jsonResult.put("clothes", clothes.subJson());
-//					clothesList.add(index, element);
+		cs.queryClothesByUserId(userId, page, new DataBaseListener<Clothes>(){
+			public void onSuccess(List<Clothes> clothesList){
+				if(clothesList!=null){
+					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					{
+						jsonResult.put("clothes", clothesList.get(i).subJson());
+						arrayData.add(jsonResult);
+					}
 				}
 			}
 		});
-//		clothesList.addAll(jsonResult);
+		return SUCCESS;
+	}
+	
+	public String ActionQueryClothesByKeyWord(){
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.queryClothesByKeyWord(keyWord, page, new DataBaseListener<Clothes>(){
+			public void onSuccess(List<Clothes> clothesList){
+				if(clothesList!=null){
+					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					{
+						jsonResult.put("clothes", clothesList.get(i).subJson());
+						arrayData.add(jsonResult);
+					}
+				}
+			}
+			
+		});
+		return SUCCESS;
+	}
+	
+	public String ActionShowClothesType(){
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.showClothesType(new DataBaseListener<ClothesType>(){
+			public void onSuccess(List<ClothesType> clothesTypeList){
+				if(clothesTypeList!=null){
+					for(int i = 0;i<clothesTypeList.size();i++)
+					{
+//						jsonData.put("clothesType", clothesTypeList.get(i).subJson());
+						jsonResult.put("clothesType", clothesTypeList.get(i).subJson());
+						arrayData.add(jsonResult);
+					}
+					System.out.println("chengongle");
+				}
+			}		
+		});	
+//		System.out.println("chengongle");
 		return SUCCESS;
 	}
  }

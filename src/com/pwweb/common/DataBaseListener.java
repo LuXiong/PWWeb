@@ -1,7 +1,12 @@
 package com.pwweb.common;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.Entity;
+
+
+@Entity
 public class DataBaseListener<T> {
 	public void onSuccess(T t){
 		
@@ -16,6 +21,9 @@ public class DataBaseListener<T> {
 		
 	}
 	public void onFinish(){
+		
+	}
+	public void onSuccess(List<T> list){
 		
 	}
 }

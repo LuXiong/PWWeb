@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
@@ -12,6 +13,7 @@ import com.pwweb.common.DataBaseListener;
 import com.pwweb.dao.BaseDAO;
 import com.pwweb.pojo.Message;
 
+@Entity
 public class MessageService {
 	@SuppressWarnings("unchecked")
 	public String saveMessage(String topic, String content,

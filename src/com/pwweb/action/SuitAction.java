@@ -11,13 +11,21 @@ import com.pwweb.pojo.Clothes;
 import com.pwweb.pojo.Suit;
 import com.pwweb.service.Imp.ClothesServiceImp;
 import com.pwweb.service.Imp.SuitServiceImp;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 
+@Entity
 public class SuitAction extends ActionSupport {
 
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue
 	private static final long serialVersionUID = 7355503326610945820L;
 
 	private String id;
@@ -28,16 +36,55 @@ public class SuitAction extends ActionSupport {
 	private Integer occasion;
 	private Date createTime;
 	private Date lastEdit;
+	private String description;
 
+	@ManyToOne
 	private Suit suit;
+	@ManyToOne
 	private SuitServiceImp suitServiceImp;
+	@OneToMany
 	private List<Suit> suitList;
 	
 	private HashMap<String, String> jsonData;
 	private HashMap<String, Object> jsonResult;
 	private ArrayList<HashMap<String, Object>> arrayData;
 	
+	public int page;
+	public int pageIndex;
+	public String keyWord;
 	
+	
+	
+	public int getPageIndex() {
+		return pageIndex;
+	}
+	public void setPageIndex(int pageIndex) {
+		this.pageIndex = pageIndex;
+	}
+	public HashMap<String, Object> getJsonResult() {
+		return jsonResult;
+	}
+	public void setJsonResult(HashMap<String, Object> jsonResult) {
+		this.jsonResult = jsonResult;
+	}
+	public int getPage() {
+		return page;
+	}
+	public void setPage(int page) {
+		this.page = page;
+	}
+	public String getKeyWord() {
+		return keyWord;
+	}
+	public void setKeyWord(String keyWord) {
+		this.keyWord = keyWord;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	public String getId() {
 		return id;
 	}
@@ -153,7 +200,7 @@ public class SuitAction extends ActionSupport {
 	public String ActionAddSuit(){
 		jsonData = new HashMap<String,String>();
 		final SuitServiceImp ss = new SuitServiceImp();
-		ss.addSuit(userId,img,weather,occasion,new DataBaseListener<Suit>(){
+		ss.addSuit(userId,img,weather,occasion,description,new DataBaseListener<Suit>(){
 			public void onSuccess(Suit suit){
 				if(suit!=null){
 					jsonData.put("suit", suit.subJson());
@@ -176,17 +223,52 @@ public class SuitAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-	public String ActionFindAllSuit(){
+//	public String ActionFindAllSuit(){
+//		final SuitServiceImp ss = new SuitServiceImp();
+//		ss.findAllSuit(userId,new DataBaseListener<Suit>(){
+//			public void onSuccess(Suit suit){
+//				if(suit != null){
+//					jsonResult.put("suit", suit.subJson());
+////					clothesList.add(index, element);
+//				}
+//			}
+//		});
+////		clothesList.addAll(jsonResult);
+//		return SUCCESS;
+//	}
+	
+	/**这个列表还是让我很困惑啊，page是对外获取的，指定返回某一页的数据，一页数据20行*/
+	public String ActionQuerySuitByUserId(){
 		final SuitServiceImp ss = new SuitServiceImp();
-		ss.findAllSuit(userId,new DataBaseListener<Suit>(){
-			public void onSuccess(Suit suit){
-				if(suit != null){
-					jsonResult.put("suit", suit.subJson());
-//					clothesList.add(index, element);
+		ss.querySuitByUserId(userId, page, new DataBaseListener<Suit>(){
+			public void onSuccess(List<Suit> suitList){
+				if(suitList != null){
+					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					{
+						jsonResult.put("suit", suitList.get(i).subJson());
+						arrayData.add(jsonResult);
+					}
 				}
 			}
+			
 		});
-//		clothesList.addAll(jsonResult);
+		return SUCCESS;
+	}
+	
+	public String ActionQuerySuitByKeyWord(){
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.querySuitByKeyWord(keyWord, page, new DataBaseListener<Suit>(){
+			public void onSuccess(List<Suit> suitList){
+				if(suitList != null){
+					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					{
+						jsonResult.put("suit", suitList.get(i).subJson());
+						arrayData.add(jsonResult);
+					}
+				}
+			}
+			
+		});
 		return SUCCESS;
 	}
 

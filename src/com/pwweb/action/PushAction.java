@@ -3,6 +3,9 @@ package com.pwweb.action;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
@@ -17,10 +20,13 @@ import com.pwweb.common.DataBaseListener;
 import com.pwweb.pojo.Message;
 import com.pwweb.service.MessageService;
 
+@Entity
 public class PushAction extends ActionSupport {
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue
 	private static final long serialVersionUID = -1492859033534619859L;
 	private JSONObject jsonObj;
 	private HashMap<String, String> jsonData;

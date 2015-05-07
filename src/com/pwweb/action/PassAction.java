@@ -15,6 +15,8 @@ import com.pwweb.pojo.User;
 import com.pwweb.service.PassService;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class PassAction extends ActionSupport {
@@ -22,6 +24,8 @@ public class PassAction extends ActionSupport {
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue
 	private static final long serialVersionUID = -2913082730224697730L;
 	private String uid;
 	private String name;

@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+
 import com.pwweb.pojo.Clothes;
+import com.pwweb.pojo.ClothesType;
+import com.pwweb.pojo.Suit;
 import com.pwweb.pojo.Token;
 import com.pwweb.pojo.User;
 import com.pwweb.common.Constant;
@@ -12,6 +19,7 @@ import com.pwweb.common.DataBaseListener;
 import com.pwweb.common.Utils;
 import com.pwweb.dao.BaseDAO;
 
+@Entity
 public class ClothesServiceImp {
 	
 /**
@@ -23,17 +31,16 @@ public class ClothesServiceImp {
  * @param listener
  * @return
  */
-	public String addClothes(String userId,int color,int category,String img,DataBaseListener<Clothes> listener) {
+	public String addClothes(String userId,int color,int category,String img,String description,DataBaseListener<Clothes> listener) {
 		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO addDAO = new BaseDAO();
 		Date date = new Date(System.currentTimeMillis());
 		String id = Utils.generateUUid();
 		String suits = "12";  //后期进行联系
-		int exponent = 1;
-		Clothes clothes = new Clothes(id, userId, color, category,
-				exponent, date, date, img,
-				suits);
+		int exponent = 0;
+		Clothes clothes = new Clothes(id, userId, color, category,exponent, date, date, img,
+				suits,description);
 //		Token token = new Token(Utils.generateUUid(), userId, date, color,
 //				category, exponent,date,date, img );
 		try {
@@ -74,7 +81,9 @@ public class ClothesServiceImp {
 		// TODO Auto-generated method stub
 		listener.onStart();
         BaseDAO updateDAO = new BaseDAO();
+		
         Clothes c = (Clothes)updateDAO.findObjectById(Clothes.class,id);
+		
         if(color == 0){
         	c.setColor(c.getColor());
         }else{
@@ -92,6 +101,7 @@ public class ClothesServiceImp {
         }
         Date date = new Date(System.currentTimeMillis());
         c.setLastEdit(date);
+        
 		try {
 //			Clothes clothes = new Clothes(c.getId(),c.getUserId(),color,category,c.getExponent(),c.getCreateTime(),c.getLastEdit(),img,c.getSuits());
 			updateDAO.updateObject(c);
@@ -112,9 +122,17 @@ public class ClothesServiceImp {
 		BaseDAO queryByIdDAO = new BaseDAO();
 		try{
 			Clothes c = (Clothes)queryByIdDAO.findObjectById(Clothes.class, id);
-			Clothes clothes = new Clothes(c.getId(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits());
-			System.out.println("find clothes successfully");
-			listener.onSuccess(clothes);
+			String userId = c.getUserId();
+			if(queryByIdDAO.findObjectById(User.class, userId)!=null){
+				Clothes clothes = new Clothes(c.getId(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits(),c.getDescription());
+				System.out.println("find clothes successfully");
+				listener.onSuccess(clothes);
+			}else{
+				listener.onFailure("该服装的用户不存在");
+			}
+//			Clothes clothes = new Clothes(c.getId(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits());
+//			System.out.println("find clothes successfully");
+//			listener.onSuccess(clothes);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -163,64 +181,74 @@ public class ClothesServiceImp {
  * @return
  */
 	
-	public List<Clothes> findAllClothes(String userId,DataBaseListener<Clothes> listener) {
-		// TODO Auto-generated method stub
+	
+	public void queryClothesByUserId(String userId,int page,DataBaseListener<Clothes> listener){
 		listener.onStart();
-		BaseDAO findAllDAO = new BaseDAO();
-		List<Clothes> clothesList = new ArrayList<Clothes>();
+		BaseDAO queryClothesByUserIdDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.eq("userId", userId));
+
 		try{
+
+			List<Clothes> clothesList = (List<Clothes>) queryClothesByUserIdDAO.findObjectByCriteria(
+					Clothes.class, res);
+			page = clothesList.size()/20;
+			if (clothesList.size() <= page*20) {
+					listener.onSuccess(clothesList);		
+			} else {
+				listener.onFailure("not exist");
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
+	}
+	/**
+	 * 根据关键字来对数据进行查询
+	 * @param keyWord
+	 * @param page
+	 * @param listener
+	 */
+	public void queryClothesByKeyWord(String keyWord,int page, DataBaseListener<Clothes> listener){
+		listener.onStart();
+		BaseDAO queryClothesBykeyWordDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.like("description", keyWord,MatchMode.ANYWHERE));
+		try{
+			List<Clothes> clothesList = (List<Clothes>) queryClothesBykeyWordDAO.findObjectByCriteria(
+					Clothes.class, res);
+		    page = clothesList.size()/20;//总的页数
+			if (clothesList.size() <= page*20) {
+					listener.onSuccess(clothesList);
+		
+//				listener.onSuccess((ArrayList<Suit>)suits);
+			} else {
+				listener.onFailure("not exist");
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
+	}
+	/**
+	 * 显示服装种类的列表，全部返回给客户端
+	 * @param listener
+	 */
+	public void showClothesType(DataBaseListener<ClothesType> listener){
+		listener.onStart();
+		BaseDAO showClothesTypeDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.isNotNull("exponent"));//把穿衣指数为非空的都选出了
+		try{
+			List<ClothesType> clothesTypeList = (List<ClothesType>) showClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
+			listener.onSuccess(clothesTypeList);
 			
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 		listener.onFinish();
-		return clothesList;
-	}
-	
-	public List<Clothes> queryClothesByKey(String userId,DataBaseListener<Clothes> listener){
-		listener.onStart();
-		BaseDAO queryClothesByKeyDAO = new BaseDAO();
-		List<Clothes> clothesList = new ArrayList<Clothes>();
-		try{
-//			queryClothesByKeyDAO.findSingletonResultByHql(hql, values);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		listener.onFinish();
-		return clothesList;
 	}
 
-//	public ClothesDAO getClothesdao() {
-//		return clothesdao;
-//	}
-//
-//	public void setClothesdao(ClothesDAO clothesdao) {
-//		this.clothesdao = clothesdao;
-//	}
-//
-//	@Override
-//	public void deleteClothes(Clothes clothes) {
-//		BaseDAO dao = new BaseDAO();
-//		this.clothesdao.deleteClothes(clothes);
-//		
-//	}
-//
-//	@Override
-//	public List<Clothes> findAllClothes() {
-//		// TODO Auto-generated method stub
-//		return this.clothesdao.findAllClothes();
-//	}
-//
-//	@Override
-//	public void saveClothes(Clothes clothes) {
-//		// TODO Auto-generated method stub
-//		this.clothesdao.saveClothes(clothes);
-//	}
-//
-//	@Override
-//	public void updateClothes(Clothes clothes) {
-//		// TODO Auto-generated method stub
-//        this.clothesdao.updateClothes(clothes);		
-//	}
 
+//	public void queryClothesType
 }

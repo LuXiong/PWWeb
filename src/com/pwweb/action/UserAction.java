@@ -13,6 +13,10 @@ import com.pwweb.pojo.Clothes;
 import com.pwweb.pojo.User;
 import com.pwweb.service.Imp.ClothesServiceImp;
 import com.pwweb.service.Imp.UserServiceImp;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class UserAction extends ActionSupport {
@@ -20,6 +24,8 @@ public class UserAction extends ActionSupport {
 	/**
 	 * 
 	 */
+	@Id
+	@GeneratedValue
 	private static final long serialVersionUID = -3818409212370094336L;
 
 	private String uid;
@@ -32,8 +38,11 @@ public class UserAction extends ActionSupport {
 	private Date lastUse;
 	private String deviceId;
 	
+	@ManyToOne
 	private User user;
+	@ManyToOne
 	private UserServiceImp userServiceImp;
+	@OneToMany
 	private List<User> userList;
 
 	private HashMap<String, String> jsonData;

@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+
 import com.pwweb.common.Constant;
 import com.pwweb.common.DataBaseListener;
 import com.pwweb.common.Utils;
@@ -11,7 +17,9 @@ import com.pwweb.dao.BaseDAO;
 import com.pwweb.pojo.Clothes;
 import com.pwweb.pojo.Suit;
 
+@Entity
 public class SuitServiceImp{
+	@ManyToOne
 	public BaseDAO suitDAO = new BaseDAO();
 /**
  * ±£´æÌ××°
@@ -36,13 +44,13 @@ public class SuitServiceImp{
 	 * @param listener
 	 * @return
 	 */
-	public String addSuit(String userId,String img,int weather,int ocassion,DataBaseListener<Suit> listener){
+	public String addSuit(String userId,String img,int weather,int ocassion,String description,DataBaseListener<Suit> listener){
 		listener.onStart();
 		BaseDAO addDAO = new BaseDAO();
 		Date date = new Date(System.currentTimeMillis());
 		String id = Utils.generateUUid();
 		String clothes= "123";
-		Suit suit = new Suit(id,userId,img,clothes,weather,ocassion,date,date);
+		Suit suit = new Suit(id,userId,img,clothes,weather,ocassion,date,date,description);
 		
 		try{
 			addDAO.saveObject(suit);
@@ -81,21 +89,22 @@ public class SuitServiceImp{
 		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO updateDAO = new BaseDAO();
-		Suit s =(Suit) updateDAO.findObjectById(Suit.class, id);
-		if(weather == 0){
+		Suit s = (Suit) updateDAO.findObjectById(Suit.class, id);
+
+		if (weather == 0) {
 			s.setWeather(s.getWeather());
-		}else{
+		} else {
 			s.setWeather(weather);
 		}
-		
-		if(occasion == 0){
+
+		if (occasion == 0) {
 			s.setOccasion(s.getOccasion());
-		}else{
+		} else {
 			s.setOccasion(occasion);
 		}
 		Date date = new Date(System.currentTimeMillis());
 		s.setLastEdit(date);
-		
+
 		try {
 			updateDAO.updateObject(s);
 			listener.onSuccess(s);
@@ -115,7 +124,7 @@ public class SuitServiceImp{
 		
 		try{
 			Suit s = (Suit)queryByIdDAO.findObjectById(Suit.class, id);
-			Suit suit = new Suit(s.getId(),s.getUserId(),s.getImg(),s.getClothes(),s.getWeather(),s.getOccasion(),s.getCreateTime(),s.getLastEdit());
+			Suit suit = new Suit(s.getId(),s.getUserId(),s.getImg(),s.getClothes(),s.getWeather(),s.getOccasion(),s.getCreateTime(),s.getLastEdit(),s.getDescription());
 			listener.onSuccess(suit);
 		} catch (Exception e){
 			e.printStackTrace();			
@@ -154,19 +163,65 @@ public class SuitServiceImp{
  * @return
  */
 	
-	public List<Suit> findAllSuit(String userId,DataBaseListener<Suit> listener) {
-		// TODO Auto-generated method stub
+//	public List<Suit> findAllSuit(String userId,DataBaseListener<Suit> listener) {
+//		// TODO Auto-generated method stub
+//		listener.onStart();
+//		BaseDAO findAllDAO = new BaseDAO();
+//		List<Suit> suitList = new ArrayList<Suit>();
+//		try{
+//			
+//		} catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		listener.onFinish();
+//		return suitList;
+//	}
+	
+	public String querySuitByUserId(String userId,int page,DataBaseListener<Suit> listener){
 		listener.onStart();
-		BaseDAO findAllDAO = new BaseDAO();
-		List<Suit> suitList = new ArrayList<Suit>();
+		BaseDAO querySuitByUserIdDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.eq("userId", userId));
+
 		try{
-			
-		} catch(Exception e){
+
+			List<Suit> suitsList = (List<Suit>) querySuitByUserIdDAO.findObjectByCriteria(
+					Suit.class, res);
+			page = suitsList.size()/20;
+			if (suitsList.size() <= page*20) {
+					listener.onSuccess(suitsList);
+//				listener.onSuccess((ArrayList<Suit>)suits);
+			} else {
+				listener.onFailure("not exist");
+			}
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 		listener.onFinish();
-		return suitList;
+		return Constant.SUCCESS;
 	}
 	
+	public String querySuitByKeyWord(String keyWord,int page, DataBaseListener<Suit> listener){
+		listener.onStart();
+		BaseDAO querySuitBykeyWordDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.like("description", keyWord,MatchMode.ANYWHERE));
+		try{
+			List<Suit> suitsList = (List<Suit>) querySuitBykeyWordDAO.findObjectByCriteria(
+					Suit.class, res);
+			page = suitsList.size()/20;
+			if (suitsList.size() <= page*20) {
+					listener.onSuccess(suitsList);
+		
+//				listener.onSuccess((ArrayList<Suit>)suits);
+			} else {
+				listener.onFailure("not exist");
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
+		return Constant.SUCCESS;
+	}
 
 }
