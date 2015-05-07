@@ -46,44 +46,50 @@ public class ClothesAction extends ActionSupport{
 	private Clothes clothes;
 	@ManyToOne
 	private ClothesServiceImp clothesServiceImp;
-	@OneToMany
-	private List<Clothes> clothesList;
-	private ArrayList<ClothesType> clothesTypeList;
-	
-	private ClothesType clothesType;
-	
+//	@OneToMany
+//	private List<Clothes> clothesList;
+//	private ArrayList<ClothesType> clothesTypeList;
+//	
+//	private ClothesType clothesType;
+//	
 	private HashMap<String, String> jsonData;
-	
-	private HashMap<String,Object> jsonResult;
-	private ArrayList<HashMap<String, Object>> arrayData;
-	private ArrayList<ClothesType> arrayDataT;
+	private ArrayList<HashMap<String, String>> arrayData;
+//	private HashMap<String,Object> jsonResult;
+//
+//	private ArrayList<ClothesType> arrayDataT;
 	
 	
 	
 	public int getPageIndex() {
 		return pageIndex;
 	}
+	public ArrayList<HashMap<String, String>> getArrayData() {
+		return arrayData;
+	}
+	public void setArrayData(ArrayList<HashMap<String, String>> arrayData) {
+		this.arrayData = arrayData;
+	}
 	public void setPageIndex(int pageIndex) {
 		this.pageIndex = pageIndex;
 	}
-	public ArrayList<ClothesType> getArrayDataT() {
-		return arrayDataT;
-	}
-	public void setArrayDataT(ArrayList<ClothesType> arrayDataT) {
-		this.arrayDataT = arrayDataT;
-	}
-	public ArrayList<ClothesType> getClothesTypeList() {
-		return clothesTypeList;
-	}
-	public void setClothesTypeList(ArrayList<ClothesType> clothesTypeList) {
-		this.clothesTypeList = clothesTypeList;
-	}
-	public ClothesType getClothesType() {
-		return clothesType;
-	}
-	public void setClothesType(ClothesType clothesType) {
-		this.clothesType = clothesType;
-	}
+//	public ArrayList<ClothesType> getArrayDataT() {
+//		return arrayDataT;
+//	}
+//	public void setArrayDataT(ArrayList<ClothesType> arrayDataT) {
+//		this.arrayDataT = arrayDataT;
+//	}
+//	public ArrayList<ClothesType> getClothesTypeList() {
+//		return clothesTypeList;
+//	}
+//	public void setClothesTypeList(ArrayList<ClothesType> clothesTypeList) {
+//		this.clothesTypeList = clothesTypeList;
+//	}
+//	public ClothesType getClothesType() {
+//		return clothesType;
+//	}
+//	public void setClothesType(ClothesType clothesType) {
+//		this.clothesType = clothesType;
+//	}
 	public String getDescription() {
 		return description;
 	}
@@ -102,24 +108,19 @@ public class ClothesAction extends ActionSupport{
 	public void setKeyWord(String keyWord) {
 		this.keyWord = keyWord;
 	}
-	public HashMap<String, Object> getJsonResult() {
-		return jsonResult;
-	}
-	public void setJsonResult(HashMap<String, Object> jsonResult) {
-		this.jsonResult = jsonResult;
-	}
+//	public HashMap<String, Object> getJsonResult() {
+//		return jsonResult;
+//	}
+//	public void setJsonResult(HashMap<String, Object> jsonResult) {
+//		this.jsonResult = jsonResult;
+//	}
 	public HashMap<String, String> getJsonData(){
 		return jsonData;
 	}
 	public void setJsonData(HashMap<String, String> jsonData) {
 		this.jsonData = jsonData;
 	}
-	public ArrayList<HashMap<String, Object>> getArrayData() {
-		return arrayData;
-	}
-	public void setArrayData(ArrayList<HashMap<String, Object>> arrayData) {
-		this.arrayData = arrayData;
-	}
+
 	public String getId() {
 		return id;
 	}
@@ -181,12 +182,12 @@ public class ClothesAction extends ActionSupport{
 		this.clothes = clothes;
 	}
 	
-	public List<Clothes> getClothesList() {
-		return clothesList;
-	}
-	public void setClothesList(List<Clothes> clothesList) {
-		this.clothesList = clothesList;
-	}
+//	public List<Clothes> getClothesList() {
+//		return clothesList;
+//	}
+//	public void setClothesList(List<Clothes> clothesList) {
+//		this.clothesList = clothesList;
+//	}
 	
 	
 	public ClothesServiceImp getClothesServiceImp() {
@@ -257,20 +258,20 @@ public class ClothesAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
-	public String ActionQueryClothesByPage(){
-		arrayData = new ArrayList<HashMap<String,Object>>();
-		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesById(id,new DataBaseListener<Clothes>(){
-			public void onSuccess(Clothes clothes){
-				if(clothes!=null){
-					jsonData.put("clothes", clothes.subJson());
-				}
-			}
-		});
-		arrayData.add(jsonResult);
+//	public String ActionQueryClothesByPage(){
+//		arrayData = new ArrayList<HashMap<String,Object>>();
+//		final ClothesServiceImp cs = new ClothesServiceImp();
+//		cs.queryClothesById(id,new DataBaseListener<Clothes>(){
+//			public void onSuccess(Clothes clothes){
+//				if(clothes!=null){
+//					jsonData.put("clothes", clothes.subJson());
+//				}
+//			}
+//		});
+//		arrayData.add(jsonResult);
 //		cs.queryClothesByPage();
-		return SUCCESS;
-	}
+//		return SUCCESS;
+//	}
 	
 //	public String ActionFindAllClothes(){
 //		final ClothesServiceImp cs = new ClothesServiceImp();
@@ -286,40 +287,42 @@ public class ClothesAction extends ActionSupport{
 //		return SUCCESS;
 //	}
 	
-	public String ActionQueryClothesByUserId(){
-		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesByUserId(userId, page, new DataBaseListener<Clothes>(){
-			public void onSuccess(List<Clothes> clothesList){
-				if(clothesList!=null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
-					{
-						jsonResult.put("clothes", clothesList.get(i).subJson());
-						arrayData.add(jsonResult);
-					}
-				}
-			}
-		});
-		return SUCCESS;
-	}
+//	public String ActionQueryClothesByUserId(){
+//		final ClothesServiceImp cs = new ClothesServiceImp();
+//		cs.queryClothesByUserId(userId, page, new DataBaseListener<Clothes>(){
+//			public void onSuccess(List<Clothes> clothesList){
+//				if(clothesList!=null){
+//					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+//					{
+//						jsonResult.put("clothes", clothesList.get(i).subJson());
+//						arrayData.add(jsonResult);
+//					}
+//				}
+//			}
+//		});
+//		return SUCCESS;
+//	}
 	
-	public String ActionQueryClothesByKeyWord(){
-		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesByKeyWord(keyWord, page, new DataBaseListener<Clothes>(){
-			public void onSuccess(List<Clothes> clothesList){
-				if(clothesList!=null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
-					{
-						jsonResult.put("clothes", clothesList.get(i).subJson());
-						arrayData.add(jsonResult);
-					}
-				}
-			}
-			
-		});
-		return SUCCESS;
-	}
+//	public String ActionQueryClothesByKeyWord(){
+//		final ClothesServiceImp cs = new ClothesServiceImp();
+//		cs.queryClothesByKeyWord(keyWord, page, new DataBaseListener<Clothes>(){
+//			public void onSuccess(List<Clothes> clothesList){
+//				if(clothesList!=null){
+//					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+//					{
+//						jsonResult.put("clothes", clothesList.get(i).subJson());
+//						arrayData.add(jsonResult);
+//					}
+//				}
+//			}
+//			
+//		});
+//		return SUCCESS;
+//	}
 	
 	public String ActionShowClothesType(){
+		
+		arrayData = new ArrayList<HashMap<String,String>>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
 		cs.showClothesType(new DataBaseListener<ClothesType>(){
 			public void onSuccess(List<ClothesType> clothesTypeList){
@@ -327,10 +330,13 @@ public class ClothesAction extends ActionSupport{
 					for(int i = 0;i<clothesTypeList.size();i++)
 					{
 //						jsonData.put("clothesType", clothesTypeList.get(i).subJson());
-						jsonResult.put("clothesType", clothesTypeList.get(i).subJson());
-						arrayData.add(jsonResult);
+//						jsonResult.put("clothesType", clothesTypeList.get(i).subJson());
+//						arrayData.add(jsonResult);
+						jsonData = new HashMap<String, String>();
+						jsonData.put("clothesType",clothesTypeList.get(i).subJson());
+						arrayData.add(jsonData);
 					}
-					System.out.println("chengongle");
+//					System.out.println("chengongle");
 				}
 			}		
 		});	

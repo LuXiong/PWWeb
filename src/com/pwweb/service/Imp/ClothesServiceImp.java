@@ -238,8 +238,9 @@ public class ClothesServiceImp {
 		listener.onStart();
 		BaseDAO showClothesTypeDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
-		res.add(Restrictions.isNotNull("exponent"));//把穿衣指数为非空的都选出了
+//		res.add(Restrictions.eq("detail_code", 21));
 		try{
+			@SuppressWarnings("unchecked")
 			List<ClothesType> clothesTypeList = (List<ClothesType>) showClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
 			listener.onSuccess(clothesTypeList);
 			
