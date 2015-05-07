@@ -46,8 +46,7 @@ public class SuitAction extends ActionSupport {
 	private List<Suit> suitList;
 	
 	private HashMap<String, String> jsonData;
-	private HashMap<String, Object> jsonResult;
-	private ArrayList<HashMap<String, Object>> arrayData;
+	private ArrayList<HashMap<String, String>> arrayData;
 	
 	public int page;
 	public int pageIndex;
@@ -61,12 +60,7 @@ public class SuitAction extends ActionSupport {
 	public void setPageIndex(int pageIndex) {
 		this.pageIndex = pageIndex;
 	}
-	public HashMap<String, Object> getJsonResult() {
-		return jsonResult;
-	}
-	public void setJsonResult(HashMap<String, Object> jsonResult) {
-		this.jsonResult = jsonResult;
-	}
+
 	public int getPage() {
 		return page;
 	}
@@ -139,10 +133,10 @@ public class SuitAction extends ActionSupport {
 	public void setJsonData(HashMap<String, String> jsonData) {
 		this.jsonData = jsonData;
 	}
-	public ArrayList<HashMap<String, Object>> getArrayData() {
+	public ArrayList<HashMap<String, String>> getArrayData() {
 		return arrayData;
 	}
-	public void setArrayData(ArrayList<HashMap<String, Object>> arrayData) {
+	public void setArrayData(ArrayList<HashMap<String, String>> arrayData) {
 		this.arrayData = arrayData;
 	}
 	public Suit getSuit() {
@@ -174,15 +168,14 @@ public class SuitAction extends ActionSupport {
 				}
 			}
 		});
-//		this.suitServiceImp.deleteSuit(suit);
 		return SUCCESS;
 	}	
 	
 	public String ActionUpdateSuit(){
-//		this.suitServiceImp.updateSuit(suit);
+
 		jsonData  = new HashMap<String,String>();
 		final SuitServiceImp ss = new SuitServiceImp();
-		ss.updateSuit(id,weather,occasion,new DataBaseListener<Suit>(){
+		ss.updateSuit(id,weather,occasion,description,new DataBaseListener<Suit>(){
 			public void onSuccess(Suit suit){
 				if(suit != null){
 					jsonData.put("suit", suit.subJson());
@@ -192,10 +185,7 @@ public class SuitAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-//	public String ActionSaveSuit(Suit suit){
-//		this.suitServiceImp.saveSuit(suit);
-//		return SUCCESS;
-//	}
+
 	
 	public String ActionAddSuit(){
 		jsonData = new HashMap<String,String>();
@@ -223,19 +213,7 @@ public class SuitAction extends ActionSupport {
 		return SUCCESS;
 	}
 	
-//	public String ActionFindAllSuit(){
-//		final SuitServiceImp ss = new SuitServiceImp();
-//		ss.findAllSuit(userId,new DataBaseListener<Suit>(){
-//			public void onSuccess(Suit suit){
-//				if(suit != null){
-//					jsonResult.put("suit", suit.subJson());
-////					clothesList.add(index, element);
-//				}
-//			}
-//		});
-////		clothesList.addAll(jsonResult);
-//		return SUCCESS;
-//	}
+
 	
 	/**这个列表还是让我很困惑啊，page是对外获取的，指定返回某一页的数据，一页数据20行*/
 	public String ActionQuerySuitByUserId(){
@@ -245,8 +223,9 @@ public class SuitAction extends ActionSupport {
 				if(suitList != null){
 					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
 					{
-						jsonResult.put("suit", suitList.get(i).subJson());
-						arrayData.add(jsonResult);
+						jsonData = new HashMap<String, String>();
+						jsonData.put("suit",suitList.get(i).subJson());
+						arrayData.add(jsonData);
 					}
 				}
 			}
@@ -256,14 +235,16 @@ public class SuitAction extends ActionSupport {
 	}
 	
 	public String ActionQuerySuitByKeyWord(){
+		arrayData = new ArrayList<HashMap<String,String>>();
 		final SuitServiceImp ss = new SuitServiceImp();
 		ss.querySuitByKeyWord(keyWord, page, new DataBaseListener<Suit>(){
 			public void onSuccess(List<Suit> suitList){
 				if(suitList != null){
 					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
 					{
-						jsonResult.put("suit", suitList.get(i).subJson());
-						arrayData.add(jsonResult);
+						jsonData = new HashMap<String, String>();
+						jsonData.put("suit",suitList.get(i).subJson());
+						arrayData.add(jsonData);
 					}
 				}
 			}

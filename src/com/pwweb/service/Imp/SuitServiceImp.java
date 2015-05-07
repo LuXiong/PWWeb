@@ -85,8 +85,8 @@ public class SuitServiceImp{
 	 * @param occasion
 	 * @param listener
 	 */
-	public void updateSuit(String id,int weather,int occasion,DataBaseListener<Suit> listener) {
-		// TODO Auto-generated method stub
+	public void updateSuit(String id,int weather,int occasion,String description,DataBaseListener<Suit> listener) {
+
 		listener.onStart();
 		BaseDAO updateDAO = new BaseDAO();
 		Suit s = (Suit) updateDAO.findObjectById(Suit.class, id);
@@ -101,6 +101,12 @@ public class SuitServiceImp{
 			s.setOccasion(s.getOccasion());
 		} else {
 			s.setOccasion(occasion);
+		}
+		
+		if (description == null) {
+			s.setDescription(s.getDescription());
+		} else {
+			s.setDescription(description);
 		}
 		Date date = new Date(System.currentTimeMillis());
 		s.setLastEdit(date);
@@ -162,20 +168,7 @@ public class SuitServiceImp{
  * @param listener
  * @return
  */
-	
-//	public List<Suit> findAllSuit(String userId,DataBaseListener<Suit> listener) {
-//		// TODO Auto-generated method stub
-//		listener.onStart();
-//		BaseDAO findAllDAO = new BaseDAO();
-//		List<Suit> suitList = new ArrayList<Suit>();
-//		try{
-//			
-//		} catch(Exception e){
-//			e.printStackTrace();
-//		}
-//		listener.onFinish();
-//		return suitList;
-//	}
+
 	
 	public String querySuitByUserId(String userId,int page,DataBaseListener<Suit> listener){
 		listener.onStart();
@@ -187,13 +180,13 @@ public class SuitServiceImp{
 
 			List<Suit> suitsList = (List<Suit>) querySuitByUserIdDAO.findObjectByCriteria(
 					Suit.class, res);
-			page = suitsList.size()/20;
-			if (suitsList.size() <= page*20) {
+//			page = suitsList.size()/20;
+//			if (suitsList.size() <= page*20) {
 					listener.onSuccess(suitsList);
 //				listener.onSuccess((ArrayList<Suit>)suits);
-			} else {
-				listener.onFailure("not exist");
-			}
+//			} else {
+//				listener.onFailure("not exist");
+//			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -209,14 +202,14 @@ public class SuitServiceImp{
 		try{
 			List<Suit> suitsList = (List<Suit>) querySuitBykeyWordDAO.findObjectByCriteria(
 					Suit.class, res);
-			page = suitsList.size()/20;
-			if (suitsList.size() <= page*20) {
+//			page = suitsList.size()/20;
+//			if (suitsList.size() <= page*20) {
 					listener.onSuccess(suitsList);
-		
-//				listener.onSuccess((ArrayList<Suit>)suits);
-			} else {
-				listener.onFailure("not exist");
-			}
+//		
+////				listener.onSuccess((ArrayList<Suit>)suits);
+//			} else {
+//				listener.onFailure("not exist");
+//			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}

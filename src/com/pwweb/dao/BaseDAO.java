@@ -67,6 +67,7 @@ public class BaseDAO {
 		}
 		return c.list();
 	}
+	
 
 	public Object findObjectByCriteria(Class<?> entityClass,
 			ArrayList<Criterion> res, ArrayList<Order> orders) {

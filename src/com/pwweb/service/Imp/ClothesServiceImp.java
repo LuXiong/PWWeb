@@ -32,13 +32,12 @@ public class ClothesServiceImp {
  * @return
  */
 	public String addClothes(String userId,int color,int category,String img,String description,DataBaseListener<Clothes> listener) {
-		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO addDAO = new BaseDAO();
 		Date date = new Date(System.currentTimeMillis());
 		String id = Utils.generateUUid();
 		String suits = "12";  //后期进行联系
-		int exponent = 0;
+		int exponent = findClothesType(category);
 		Clothes clothes = new Clothes(id, userId, color, category,exponent, date, date, img,
 				suits,description);
 //		Token token = new Token(Utils.generateUUid(), userId, date, color,
@@ -58,12 +57,18 @@ public class ClothesServiceImp {
  * @param clothesId
  * @param listener
  */
+/**删除该衣服的同时删除该衣服所包含的suit*/
 	public void deleteClothes(String clothesId,DataBaseListener<Clothes> listener) {
-		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO deleteDAO = new BaseDAO();
+//		ArrayList<Criterion> res = new ArrayList<Criterion>();
+//		res.add(Restrictions.eq("clothesId", clothesId));
 		try {
+//			List<Suit> suitList = (List<Suit>)deleteDAO.findObjectByCriteria(Suit.class, res);
 			deleteDAO.deleteObjectById(Clothes.class, clothesId);		
+//            for(int i=0;i<suitList.size();i++){
+//            	deleteDAO.deleteObjectById(Suit.class, suitList.get(i).getId()); 
+//            }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,19 +82,18 @@ public class ClothesServiceImp {
  * @param img
  * @param listener
  */
-	public void updateClothes(String id,int color,int category,String img,DataBaseListener<Clothes> listener) {
-		// TODO Auto-generated method stub
+	public void updateClothes(String id,int color,int category,String img,String description,DataBaseListener<Clothes> listener) {
 		listener.onStart();
         BaseDAO updateDAO = new BaseDAO();
 		
         Clothes c = (Clothes)updateDAO.findObjectById(Clothes.class,id);
 		
-        if(color == 0){
+        if(color != c.getColor()){
         	c.setColor(c.getColor());
         }else{
         	c.setColor(color);
         }
-        if(category == 0){
+        if(category != c.getCategory()){
         	c.setCategory(c.getCategory());
         }else{
         	c.setCategory(category);
@@ -98,6 +102,11 @@ public class ClothesServiceImp {
         	c.setImg(c.getImg());
         }else{
         	c.setImg(img);
+        }
+        if(description == null){
+        	c.setDescription(c.getDescription());
+        }else{
+        	c.setDescription(description);
         }
         Date date = new Date(System.currentTimeMillis());
         c.setLastEdit(date);
@@ -117,7 +126,6 @@ public class ClothesServiceImp {
  * @param listener
  */
 	public void queryClothesById(String id, DataBaseListener<Clothes> listener) {
-		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO queryByIdDAO = new BaseDAO();
 		try{
@@ -155,26 +163,6 @@ public class ClothesServiceImp {
 	}
 	
 /**
- * 检查该分类的数值所代表的分类
- * @param category
- * @return
- */
-	public String CheckClothesType(int category){
-		String categoryW = null;
-		switch(category){
-		case 11: categoryW = "女裙装";break;
-		case 12: categoryW = "女上衣";break;
-		case 13: categoryW = "女裤装";break;
-		case 14: categoryW = "女鞋";break;
-		case 15: categoryW = "女性其他用品";break;
-		case 01: categoryW = "男上衣";break;
-		case 02: categoryW = "男下装";break;
-		case 03: categoryW = "男鞋";break;
-		case 04: categoryW = "男性其他用品";break;
-		}
-		return categoryW;
-	}
-/**
  * 根据用户的id查询该用户所有的服装
  * @param userId
  * @param listener
@@ -182,22 +170,21 @@ public class ClothesServiceImp {
  */
 	
 	
-	public void queryClothesByUserId(String userId,int page,DataBaseListener<Clothes> listener){
+	public void queryClothesByUserId(String userId,DataBaseListener<Clothes> listener){
 		listener.onStart();
 		BaseDAO queryClothesByUserIdDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
 		res.add(Restrictions.eq("userId", userId));
-
 		try{
 
 			List<Clothes> clothesList = (List<Clothes>) queryClothesByUserIdDAO.findObjectByCriteria(
 					Clothes.class, res);
-			page = clothesList.size()/20;
-			if (clothesList.size() <= page*20) {
+//			int page = clothesList.size()/20;
+//			if (clothesList.size() <= page*20) {
 					listener.onSuccess(clothesList);		
-			} else {
-				listener.onFailure("not exist");
-			}
+//			} else {
+//				listener.onFailure("not exist");
+//			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -238,8 +225,8 @@ public class ClothesServiceImp {
 		listener.onStart();
 		BaseDAO showClothesTypeDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
-		res.add(Restrictions.isNotNull("exponent"));//把穿衣指数为非空的都选出了
 		try{
+			@SuppressWarnings("unchecked")
 			List<ClothesType> clothesTypeList = (List<ClothesType>) showClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
 			listener.onSuccess(clothesTypeList);
 			
@@ -249,6 +236,20 @@ public class ClothesServiceImp {
 		listener.onFinish();
 	}
 
+/**
+ * 根据category来判断该件衣服的穿衣指数，并且返回
+ * @param category
+ * @return
+ */
 
-//	public void queryClothesType
+	public int findClothesType(int category){
+		int exponent = 0;
+		BaseDAO findClothesTypeDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.eq("detailCode", category));
+		ClothesType clothesType = (ClothesType)findClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
+		exponent = clothesType.getDetailCode();
+		return exponent;
+		
+	}
 }

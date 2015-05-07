@@ -45,6 +45,7 @@ public class Clothes implements java.io.Serializable {
 		this.createTime = createTime;
 		this.lastEdit = lastEdit;
 	}
+	
 
 	/** full constructor */
 	public Clothes(String id,String userId, Integer color, Integer category,
