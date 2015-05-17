@@ -27,6 +27,8 @@ public class Suit implements java.io.Serializable {
 	private Date createTime;
 	private Date lastEdit;
 	private String description;
+	private Integer isLike;
+	private String thumb;
 
 	// Constructors
 
@@ -41,10 +43,10 @@ public class Suit implements java.io.Serializable {
 		this.lastEdit = lastEdit;
 	}
 
-	/** full constructor 
-	 * @param clothes2 */
+	/** full constructor */
 	public Suit(String id,String userId, String img, String clothes, Integer weather,
-			Integer occasion, Date createTime, Date lastEdit, String description) {
+			Integer occasion, Date createTime, Date lastEdit,
+			String description, Integer isLike, String thumb) {
 		this.id = id;
 		this.userId = userId;
 		this.img = img;
@@ -54,11 +56,12 @@ public class Suit implements java.io.Serializable {
 		this.createTime = createTime;
 		this.lastEdit = lastEdit;
 		this.description = description;
+		this.isLike = isLike;
+		this.thumb = thumb;
 	}
 
 	// Property accessors
 	@Id
-	@GeneratedValue
 	@Column(name = "id", unique = true, nullable = false)
 	public String getId() {
 		return this.id;
@@ -139,6 +142,24 @@ public class Suit implements java.io.Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	@Column(name = "is_like")
+	public Integer getIsLike() {
+		return this.isLike;
+	}
+
+	public void setIsLike(Integer isLike) {
+		this.isLike = isLike;
+	}
+
+	@Column(name = "thumb")
+	public String getThumb() {
+		return this.thumb;
+	}
+
+	public void setThumb(String thumb) {
+		this.thumb = thumb;
+	}
 	
 	public String subJson() {
 		JSONObject result = new JSONObject();
@@ -151,6 +172,8 @@ public class Suit implements java.io.Serializable {
 		result.put("img", img);
 		result.put("clothes", clothes);
 		result.put("description", description);
+		result.put("is_like", isLike);
+		result.put("thumb", thumb);
 		System.out.println(result.toString());
 		return result.toString();
 	}

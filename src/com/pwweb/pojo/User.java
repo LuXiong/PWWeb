@@ -1,9 +1,9 @@
 package com.pwweb.pojo;
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -27,6 +27,7 @@ public class User implements java.io.Serializable {
 	private Date createTime;
 	private Date lastUse;
 	private String deviceId;
+	private String description;
 
 	// Constructors
 
@@ -35,22 +36,21 @@ public class User implements java.io.Serializable {
 	}
 
 	/** minimal constructor */
-	public User(String uid, String name, Integer gender, String password,
-			String phone, String deviceId) {
-		this.uid = uid;
+	public User(String name, Integer gender, String password, String phone,
+			Date createTime, Date lastUse, String deviceId) {
 		this.name = name;
 		this.gender = gender;
 		this.password = password;
 		this.phone = phone;
-		// this.createTime = createTime;
-		// this.lastUse = lastUse;
+		this.createTime = createTime;
+		this.lastUse = lastUse;
 		this.deviceId = deviceId;
 	}
 
 	/** full constructor */
-	public User(String uid, String name, Integer gender, String password,
-			String phone, String avatar, Date createTime, Date lastUse,
-			String deviceId) {
+	public User(String uid,String name, Integer gender, String password, String phone,
+			String avatar, Date createTime, Date lastUse, String deviceId,
+			String description) {
 		this.uid = uid;
 		this.name = name;
 		this.gender = gender;
@@ -60,6 +60,7 @@ public class User implements java.io.Serializable {
 		this.createTime = createTime;
 		this.lastUse = lastUse;
 		this.deviceId = deviceId;
+		this.description = description;
 	}
 
 	// Property accessors
@@ -118,7 +119,7 @@ public class User implements java.io.Serializable {
 		this.avatar = avatar;
 	}
 
-	@Column(name = "create_time", length = 19)
+	@Column(name = "create_time", nullable = false, length = 19)
 	public Date getCreateTime() {
 		return this.createTime;
 	}
@@ -127,7 +128,7 @@ public class User implements java.io.Serializable {
 		this.createTime = createTime;
 	}
 
-	@Column(name = "last_use", length = 19)
+	@Column(name = "last_use", nullable = false, length = 19)
 	public Date getLastUse() {
 		return this.lastUse;
 	}
@@ -145,6 +146,15 @@ public class User implements java.io.Serializable {
 		this.deviceId = deviceId;
 	}
 
+	@Column(name = "description")
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 	public String subJson() {
 		JSONObject result = new JSONObject();
 		result.put("uid", uid);
@@ -156,6 +166,7 @@ public class User implements java.io.Serializable {
 		result.put("avatar", avatar);
 		result.put("createTime", createTime.getTime());
 		result.put("lastUse", createTime.getTime());
+		result.put("description",description);
 		return result.toString();
 	}
 

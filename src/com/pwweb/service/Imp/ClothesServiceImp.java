@@ -5,19 +5,20 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
+
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
-import com.pwweb.pojo.Clothes;
-import com.pwweb.pojo.ClothesType;
-import com.pwweb.pojo.Suit;
-import com.pwweb.pojo.Token;
-import com.pwweb.pojo.User;
 import com.pwweb.common.Constant;
 import com.pwweb.common.DataBaseListener;
 import com.pwweb.common.Utils;
 import com.pwweb.dao.BaseDAO;
+import com.pwweb.pojo.Clothes;
+import com.pwweb.pojo.ClothesType;
+import com.pwweb.pojo.Suit;
+import com.pwweb.pojo.User;
 
 @Entity
 public class ClothesServiceImp {
@@ -31,20 +32,29 @@ public class ClothesServiceImp {
  * @param listener
  * @return
  */
-	public String addClothes(String userId,int color,int category,String img,String description,DataBaseListener<Clothes> listener) {
+	public String addClothes(String userId,int color,int category,String img,String thumb,String description,int isLike,DataBaseListener<Clothes> listener) {
 		listener.onStart();
 		BaseDAO addDAO = new BaseDAO();
 		Date date = new Date(System.currentTimeMillis());
 		String id = Utils.generateUUid();
-		String suits = "12";  //后期进行联系
-		int exponent = findClothesType(category);
-		Clothes clothes = new Clothes(id, userId, color, category,exponent, date, date, img,
-				suits,description);
+		String suits = null;  //后期进行联系
+//		int exponent = findClothesType(category);
+		int exponent = 2;
+		Clothes clothes = new Clothes(id,userId, color, category,exponent, date, date, img,
+				suits,description,isLike,thumb);
 //		Token token = new Token(Utils.generateUUid(), userId, date, color,
 //				category, exponent,date,date, img );
+		System.out.println("userId:"+userId);
 		try {
+			
+			System.out.println("user:"+addDAO.findObjectById(User.class, userId).toString());
+			if(addDAO.findObjectById(User.class, userId)!= null){		
 			addDAO.saveObject(clothes);
 			listener.onSuccess(clothes);
+//	        System.out.println("clothes:"+clothes.toString());
+			} else {
+				listener.onFailure("the user does not exist");
+			}
 //			clothesdao.saveObject(token);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,14 +71,20 @@ public class ClothesServiceImp {
 	public void deleteClothes(String clothesId,DataBaseListener<Clothes> listener) {
 		listener.onStart();
 		BaseDAO deleteDAO = new BaseDAO();
-//		ArrayList<Criterion> res = new ArrayList<Criterion>();
-//		res.add(Restrictions.eq("clothesId", clothesId));
+		BaseDAO updateSuitDAO = new BaseDAO();//保存服装删除后的搭配的clothes
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.disjunction()
+				.add(Restrictions.like("clothes", clothesId,MatchMode.ANYWHERE))
+				.add(Restrictions.like("clothes", clothesId,MatchMode.END))
+				.add(Restrictions.like("clothes", clothesId,MatchMode.START)));
 		try {
-//			List<Suit> suitList = (List<Suit>)deleteDAO.findObjectByCriteria(Suit.class, res);
-			deleteDAO.deleteObjectById(Clothes.class, clothesId);		
-//            for(int i=0;i<suitList.size();i++){
-//            	deleteDAO.deleteObjectById(Suit.class, suitList.get(i).getId()); 
-//            }
+			List<Suit> suitList = (List<Suit>)updateSuitDAO.findObjectByCriteria(Suit.class, res);	
+            for(int i=0;i<suitList.size();i++){
+            	suitList.get(i).setClothes(suitList.get(i).getClothes().replaceFirst(clothesId, ""));
+            	updateSuitDAO.updateObject(suitList.get(i));
+            	
+            }
+            deleteDAO.deleteObjectById(Clothes.class, clothesId);	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,7 +101,6 @@ public class ClothesServiceImp {
 	public void updateClothes(String id,int color,int category,String img,String description,DataBaseListener<Clothes> listener) {
 		listener.onStart();
         BaseDAO updateDAO = new BaseDAO();
-		
         Clothes c = (Clothes)updateDAO.findObjectById(Clothes.class,id);
 		
         if(color != c.getColor()){
@@ -132,15 +147,13 @@ public class ClothesServiceImp {
 			Clothes c = (Clothes)queryByIdDAO.findObjectById(Clothes.class, id);
 			String userId = c.getUserId();
 			if(queryByIdDAO.findObjectById(User.class, userId)!=null){
-				Clothes clothes = new Clothes(c.getId(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits(),c.getDescription());
+				Clothes clothes = new Clothes(c.getUuid(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits(),c.getDescription(),c.getIsLike(),c.getThumb());
 				System.out.println("find clothes successfully");
 				listener.onSuccess(clothes);
 			}else{
 				listener.onFailure("该服装的用户不存在");
 			}
-//			Clothes clothes = new Clothes(c.getId(),c.getUserId(),c.getColor(),c.getCategory(),c.getExponent(),c.getCreateTime(),c.getLastEdit(),c.getImg(),c.getSuits());
-//			System.out.println("find clothes successfully");
-//			listener.onSuccess(clothes);
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -170,22 +183,39 @@ public class ClothesServiceImp {
  */
 	
 	
-	public void queryClothesByUserId(String userId,DataBaseListener<Clothes> listener){
+	public void queryClothesByUserId(String userId,int page,DataBaseListener<Clothes> listener){
 		listener.onStart();
 		BaseDAO queryClothesByUserIdDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		ArrayList<Order> orders = new ArrayList<Order>();
+		orders.add(Order.desc("lastEdit"));
 		res.add(Restrictions.eq("userId", userId));
-		try{
+		try {
 
-			List<Clothes> clothesList = (List<Clothes>) queryClothesByUserIdDAO.findObjectByCriteria(
-					Clothes.class, res);
-//			int page = clothesList.size()/20;
-//			if (clothesList.size() <= page*20) {
-					listener.onSuccess(clothesList);		
-//			} else {
-//				listener.onFailure("not exist");
-//			}
-		} catch (Exception e){
+			List<Clothes> clothesList = (List<Clothes>) queryClothesByUserIdDAO
+					.findObjectByCriteria(Clothes.class, res, orders);
+			ArrayList<Clothes> clothesShowList = new ArrayList<Clothes>();
+			if (page == 0) {
+				for (int i = 0; i < clothesList.size(); i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if ((page * 20 <= clothesList.size())&&(page!=0)) {
+				for (int i = (page - 1) * 20; i < page * 20; i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if (((page - 1) * 20 <= clothesList.size())
+					&& (clothesList.size() <= page * 20)) {
+				for (int i = (page - 1) * 20; i < clothesList.size(); i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if (page * 20 > clothesList.size()) {
+				System.out.println("no more results");
+				listener.onFailure("no more");
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		listener.onFinish();
@@ -200,21 +230,45 @@ public class ClothesServiceImp {
 		listener.onStart();
 		BaseDAO queryClothesBykeyWordDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
-		res.add(Restrictions.like("description", keyWord,MatchMode.ANYWHERE));
-		try{
-			List<Clothes> clothesList = (List<Clothes>) queryClothesBykeyWordDAO.findObjectByCriteria(
-					Clothes.class, res);
-		    page = clothesList.size()/20;//总的页数
-			if (clothesList.size() <= page*20) {
-					listener.onSuccess(clothesList);
+		ArrayList<Order> orders = new ArrayList<Order>();
+		res.add(Restrictions.disjunction()
+				.add(Restrictions.like("description", keyWord,MatchMode.ANYWHERE))
+				.add(Restrictions.like("description", keyWord,MatchMode.END))
+				.add(Restrictions.like("description", keyWord,MatchMode.START)));
+//		res.add(Restrictions.like("description", keyWord,MatchMode.ANYWHERE))
+//		.add(Restrictions.like("description", keyWord,MatchMode.END))
+//		.add(Restrictions.like("description", keyWord,MatchMode.START));
 		
-//				listener.onSuccess((ArrayList<Suit>)suits);
-			} else {
-				listener.onFailure("not exist");
+		orders.add(Order.desc("lastEdit"));
+	
+		try {
+			List<Clothes> clothesList = (List<Clothes>) queryClothesBykeyWordDAO
+					.findObjectByCriteria(Clothes.class, res, orders);
+			ArrayList<Clothes> clothesShowList = new ArrayList<Clothes>();
+			if (page == 0) {
+				for (int i = 0; i < clothesList.size(); i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if ((page * 20 <= clothesList.size())&&(page!=0)) {
+				for (int i = (page - 1) * 20; i < page * 20; i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if (((page - 1) * 20 <= clothesList.size())
+					&& (clothesList.size() <= page * 20)) {
+				for (int i = (page - 1) * 20; i < clothesList.size(); i++) {
+					clothesShowList.add(clothesList.get(i));
+				}
+				listener.onSuccess((List<Clothes>) clothesShowList);
+			} else if (page * 20 > clothesList.size()) {
+				System.out.println("no more results");
+				listener.onFailure("no more");
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		listener.onFinish();
 	}
 	/**
@@ -225,6 +279,7 @@ public class ClothesServiceImp {
 		listener.onStart();
 		BaseDAO showClothesTypeDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
+
 		try{
 			@SuppressWarnings("unchecked")
 			List<ClothesType> clothesTypeList = (List<ClothesType>) showClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
@@ -247,9 +302,82 @@ public class ClothesServiceImp {
 		BaseDAO findClothesTypeDAO = new BaseDAO();
 		ArrayList<Criterion> res = new ArrayList<Criterion>();
 		res.add(Restrictions.eq("detailCode", category));
-		ClothesType clothesType = (ClothesType)findClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
-		exponent = clothesType.getDetailCode();
+		List<ClothesType> clothesTypeList = (List<ClothesType>)findClothesTypeDAO.findObjectByCriteria(ClothesType.class, res);
+		exponent = clothesTypeList.get(0).getDetailCode();
 		return exponent;
 		
+	}
+	/**
+	 * 当用户添加新的套装时，对应衣服的suitId的更新
+	 * @param id
+	 * @param listener
+	 */
+	public void updateSuitsId(String id,DataBaseListener<Clothes> listener) {
+		listener.onStart();
+		String suitsId = null;
+		BaseDAO updateSuitsIdDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.disjunction()
+				.add(Restrictions.like("clothes", id,MatchMode.ANYWHERE))
+				.add(Restrictions.like("clothes", id,MatchMode.END))
+				.add(Restrictions.like("clothes", id,MatchMode.START)));
+		List<Suit> suitsList = (List<Suit>) updateSuitsIdDAO.findObjectByCriteria(Suit.class, res);
+		for(int i = 0;i<suitsList.size();i++)
+		{
+			
+			suitsId = suitsId + suitsList.get(i).getId();
+		}
+
+		try{
+		Clothes clothes = (Clothes) updateSuitsIdDAO.findObjectById(Clothes.class, id);
+		clothes.setSuits(suitsId);
+		updateSuitsIdDAO.updateObject(clothes);
+		listener.onSuccess(clothes);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		listener.onFinish();
+	}
+	/**
+	 * 改变用户对服装的喜爱
+	 * @param id
+	 * @param listener
+	 */
+	public void updateClothesIsLike(String id,DataBaseListener<Clothes> listener) {
+		listener.onStart();
+		BaseDAO updateClothesIsLikeDAO = new BaseDAO();
+		try{
+		Clothes clothes = (Clothes) updateClothesIsLikeDAO.findObjectById(Clothes.class, id);
+		if(clothes.getIsLike() == 0){
+			clothes.setIsLike(1);
+			updateClothesIsLikeDAO.updateObject(clothes);
+			listener.onSuccess(clothes);
+		}else if(clothes.getIsLike() == 1){
+			clothes.setIsLike(0);
+			updateClothesIsLikeDAO.updateObject(clothes);
+			listener.onSuccess(clothes);
+		}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
+	}
+	
+	public void querySuitByClothesId(String clothesId,DataBaseListener<Suit> listener){
+		listener.onStart();
+		BaseDAO queryDAO = new BaseDAO();
+		ArrayList<Criterion> res = new ArrayList<Criterion>();
+		res.add(Restrictions.disjunction()
+				.add(Restrictions.like("clothes", clothesId,MatchMode.ANYWHERE))
+				.add(Restrictions.like("clothes", clothesId,MatchMode.END))
+				.add(Restrictions.like("clothes", clothesId,MatchMode.START)));
+		try{
+			List<Suit> suitList = (List<Suit>)queryDAO.findObjectByCriteria(Suit.class, res);
+			listener.onSuccess(suitList);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		listener.onFinish();
 	}
 }

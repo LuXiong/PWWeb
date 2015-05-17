@@ -47,6 +47,12 @@
 				<param name="root">jsonData</param>
 			</result>
 		</action>
+		<action name="queryById" class="com.pwweb.action.UserAction" 
+		    method="ActionQueryUserById">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
 	</package>
 	<package name="clothes" namespace="/clothes" extends="json-default">
 		<action name="delete" class="com.pwweb.action.ClothesAction"
@@ -91,6 +97,24 @@
 				<param name="root">arrayData</param>
 			</result>
 		</action>
+		<action name="updateSuitsId" class="com.pwweb.action.ClothesAction"
+			method="ActionUpdateSuitsId">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="updateIsLike" class="com.pwweb.action.ClothesAction"
+			method="ActionUpdateClothesIsLike">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="querySuitByClothesId" class="com.pwweb.action.ClothesAction"
+			method="ActionQuerySuitByClothesId">
+			<result type="json" name="success">
+				<param name="root">arrayData</param>
+			</result>
+		</action>
 	</package>
 	<package name="suit" namespace="/suit" extends="json-default">
 		<action name="delete" class="com.pwweb.action.SuitAction"
@@ -126,6 +150,67 @@
 			method="ActionQuerySuitByKeyWord">
 			<result type="json" name="success">
 				<param name="root">arrayData</param>
+			</result>
+		</action>
+		<action name="updateIsLike" class="com.pwweb.action.SuitAction"
+			method="ActionUpdateSuitIsLike">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="queryClothesBySuitId" class="com.pwweb.action.SuitAction"
+			method="ActionQueryClothesBySuitId">
+			<result type="json" name="success">
+				<param name="root">arrayData</param>
+			</result>
+		</action>
+	</package>
+	<package name="share" namespace="/share" extends="json-default">
+		<action name="add" class="com.pwweb.action.ShareAction" method="ActionAddShare">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="delete" class="com.pwweb.action.ShareAction"
+			method="ActionDeleteShare">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="update" class="com.pwweb.action.ShareAction"
+			method="ActionUpdateCurrentShare">
+			<result type="json" name="success">
+				<param name="root">arrayData</param>
+			</result>
+		</action>
+		<action name="addComment" class="com.pwweb.action.ShareAction"
+			method="ActionAddComment">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="getComment" class="com.pwweb.action.ShareAction"
+			method="ActionGetComment">
+			<result type="json" name="success">
+				<param name="root">arrayData</param>
+			</result>
+		</action>
+		<action name="queryByUserId" class="com.pwweb.action.ShareAction"
+			method="ActionQueryShareByUserId">
+			<result type="json" name="success">
+				<param name="root">arrayData</param>
+			</result>
+		</action>
+		<action name="addLike" class="com.pwweb.action.ShareAction"
+			method="ActionAddLike">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
+			</result>
+		</action>
+		<action name="addCollect" class="com.pwweb.action.ShareAction"
+			method="ActionAddCollect">
+			<result type="json" name="success">
+				<param name="root">jsonData</param>
 			</result>
 		</action>
 	</package>

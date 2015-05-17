@@ -37,7 +37,9 @@ public class SuitAction extends ActionSupport {
 	private Date createTime;
 	private Date lastEdit;
 	private String description;
-
+	private int isLike;
+    private String thumb;
+	
 	@ManyToOne
 	private Suit suit;
 	@ManyToOne
@@ -127,6 +129,13 @@ public class SuitAction extends ActionSupport {
 	public void setLastEdit(Date lastEdit) {
 		this.lastEdit = lastEdit;
 	}
+	
+	public int getIsLike() {
+		return isLike;
+	}
+	public void setIsLike(int isLike) {
+		this.isLike = isLike;
+	}
 	public HashMap<String, String> getJsonData() {
 		return jsonData;
 	}
@@ -146,6 +155,13 @@ public class SuitAction extends ActionSupport {
 		this.suit = suit;
 	}
 
+	
+	public String getThumb() {
+		return thumb;
+	}
+	public void setThumb(String thumb) {
+		this.thumb = thumb;
+	}
 	public SuitServiceImp getSuitServiceImp() {
 		return suitServiceImp;
 	}
@@ -190,7 +206,8 @@ public class SuitAction extends ActionSupport {
 	public String ActionAddSuit(){
 		jsonData = new HashMap<String,String>();
 		final SuitServiceImp ss = new SuitServiceImp();
-		ss.addSuit(userId,img,weather,occasion,description,new DataBaseListener<Suit>(){
+		System.out.println("start");
+		ss.addSuit(userId,img,thumb,weather,occasion,clothes,description,isLike,new DataBaseListener<Suit>(){
 			public void onSuccess(Suit suit){
 				if(suit!=null){
 					jsonData.put("suit", suit.subJson());
@@ -217,11 +234,12 @@ public class SuitAction extends ActionSupport {
 	
 	/**这个列表还是让我很困惑啊，page是对外获取的，指定返回某一页的数据，一页数据20行*/
 	public String ActionQuerySuitByUserId(){
+		arrayData = new ArrayList<HashMap<String,String>>();
 		final SuitServiceImp ss = new SuitServiceImp();
 		ss.querySuitByUserId(userId, page, new DataBaseListener<Suit>(){
 			public void onSuccess(List<Suit> suitList){
 				if(suitList != null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					for(int i = 0;i<suitList.size();i++)
 					{
 						jsonData = new HashMap<String, String>();
 						jsonData.put("suit",suitList.get(i).subJson());
@@ -240,7 +258,7 @@ public class SuitAction extends ActionSupport {
 		ss.querySuitByKeyWord(keyWord, page, new DataBaseListener<Suit>(){
 			public void onSuccess(List<Suit> suitList){
 				if(suitList != null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					for(int i = 0;i<suitList.size();i++)
 					{
 						jsonData = new HashMap<String, String>();
 						jsonData.put("suit",suitList.get(i).subJson());
@@ -249,6 +267,36 @@ public class SuitAction extends ActionSupport {
 				}
 			}
 			
+		});
+		return SUCCESS;
+	}
+	
+	public String ActionUpdateSuitIsLike(){
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.updateSuitIsLike(id,
+				new DataBaseListener<Suit>() {
+			public void onSuccess(Suit suit) {
+				if (suit != null) {
+					jsonData.put("suit", suit.subJson())	;
+								}
+							}
+			});
+		return SUCCESS;
+	}
+	
+	public String ActionQueryClothesBySuitId(){
+		arrayData = new ArrayList<HashMap<String,String>>();
+		final SuitServiceImp ss = new SuitServiceImp();
+		ss.queryClothesBySuitId(id, new DataBaseListener<Clothes>(){
+			public void onSuccess(List<Clothes> clothesList){
+				if(clothesList!=null){
+					for(int i = 0;i<clothesList.size();i++){
+						jsonData = new HashMap<String, String>();
+						jsonData.put("clothes",clothesList.get(i).subJson());
+						arrayData.add(jsonData);
+					}
+				}
+			}
 		});
 		return SUCCESS;
 	}

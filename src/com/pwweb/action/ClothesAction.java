@@ -9,6 +9,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import com.pwweb.common.DataBaseListener;
 import com.pwweb.pojo.Clothes;
 import com.pwweb.pojo.ClothesType;
+import com.pwweb.pojo.Suit;
 import com.pwweb.service.Imp.ClothesServiceImp;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class ClothesAction extends ActionSupport{
 	@GeneratedValue
 	private static final long serialVersionUID = 8690763859731566034L;
 
-	private String id;
+	private String uuid;
 	private String userId;
 	private Integer color;
 	private Integer category;
@@ -36,6 +37,8 @@ public class ClothesAction extends ActionSupport{
 	private String img;
 	private String suits;
 	private String description;
+	private int isLike;
+	private String thumb;
 	
 	public int page;
 	public int pageIndex = 1;
@@ -46,12 +49,20 @@ public class ClothesAction extends ActionSupport{
 	@ManyToOne
 	private ClothesServiceImp clothesServiceImp;
 
+
 	private HashMap<String, String> jsonData;
 	private ArrayList<HashMap<String, String>> arrayData;
 
 	
 	
 	
+	
+	public int isLike() {
+		return isLike;
+	}
+	public void setLike(int isLike) {
+		this.isLike = isLike;
+	}
 	public int getPageIndex() {
 		return pageIndex;
 	}
@@ -91,11 +102,12 @@ public class ClothesAction extends ActionSupport{
 		this.jsonData = jsonData;
 	}
 
-	public String getId() {
-		return id;
+
+	public String getUuid() {
+		return uuid;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 	public String getUserId() {
 		return userId;
@@ -152,6 +164,7 @@ public class ClothesAction extends ActionSupport{
 		this.clothes = clothes;
 	}
 	
+	
 //	public List<Clothes> getClothesList() {
 //		return clothesList;
 //	}
@@ -160,6 +173,18 @@ public class ClothesAction extends ActionSupport{
 //	}
 	
 	
+	public int getIsLike() {
+		return isLike;
+	}
+	public void setIsLike(int isLike) {
+		this.isLike = isLike;
+	}
+	public String getThumb() {
+		return thumb;
+	}
+	public void setThumb(String thumb) {
+		this.thumb = thumb;
+	}
 	public ClothesServiceImp getClothesServiceImp() {
 		return clothesServiceImp;
 	}
@@ -169,7 +194,7 @@ public class ClothesAction extends ActionSupport{
 	
 	public String ActionDeleteClothes(){
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.deleteClothes(id,
+		cs.deleteClothes(uuid,
 				new DataBaseListener<Clothes>() {
 			public void onSuccess(Clothes clothes) {
 				if (clothes != null) {
@@ -183,7 +208,7 @@ public class ClothesAction extends ActionSupport{
 	public String ActionUpdateClothes(){
 		jsonData =  new HashMap<String,String>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.updateClothes(id,color,category,img,description,new DataBaseListener<Clothes>(){
+		cs.updateClothes(uuid,color,category,img,description,new DataBaseListener<Clothes>(){
 			public void onSuccess(Clothes clothes){
 				if(clothes!=null){
 					jsonData.put("clothes",clothes.subJson());
@@ -195,9 +220,10 @@ public class ClothesAction extends ActionSupport{
 	}
 	
 	public String ActionAddClothes(){
+        System.out.println("start");
 		jsonData = new HashMap<String,String>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.addClothes(userId,color,category,img,description,new DataBaseListener<Clothes>(){
+		cs.addClothes(userId,color,category,img,thumb,description,isLike,new DataBaseListener<Clothes>(){
 			public void onSuccess(Clothes clothes){
 				if(clothes!=null){
 					jsonData.put("clothes", clothes.subJson());
@@ -214,7 +240,7 @@ public class ClothesAction extends ActionSupport{
 	public String ActionQueryClothesById(){
 		jsonData = new HashMap<String,String>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesById(id,new DataBaseListener<Clothes>(){
+		cs.queryClothesById(uuid,new DataBaseListener<Clothes>(){
 			public void onSuccess(Clothes clothes){
 				if(clothes!=null){
 					jsonData.put("clothes", clothes.subJson());
@@ -224,15 +250,16 @@ public class ClothesAction extends ActionSupport{
 		return SUCCESS;
 	}
 	
+
 	
 	public String ActionQueryClothesByUserId(){
 		arrayData = new ArrayList<HashMap<String,String>>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesByUserId(userId, new DataBaseListener<Clothes>(){
+		cs.queryClothesByUserId(userId,page,new DataBaseListener<Clothes>(){
 			public void onSuccess(List<Clothes> clothesList){
 				if(clothesList!=null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
-//					for(int i = 0;i<clothesList.size();i++)
+//					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					for(int i = 0;i<clothesList.size();i++)
 					{
 						jsonData = new HashMap<String, String>();
 						jsonData.put("clothes",clothesList.get(i).subJson());
@@ -247,10 +274,10 @@ public class ClothesAction extends ActionSupport{
 	public String ActionQueryClothesByKeyWord(){
 		arrayData = new ArrayList<HashMap<String,String>>();
 		final ClothesServiceImp cs = new ClothesServiceImp();
-		cs.queryClothesByKeyWord(keyWord, page, new DataBaseListener<Clothes>(){
+		cs.queryClothesByKeyWord(keyWord,page,new DataBaseListener<Clothes>(){
 			public void onSuccess(List<Clothes> clothesList){
 				if(clothesList!=null){
-					for(int i = (pageIndex-1)*20;i<pageIndex*2;i++)
+					for(int i = 0;i<clothesList.size();i++)
 					{
 						jsonData = new HashMap<String, String>();
 						jsonData.put("clothes",clothesList.get(i).subJson());
@@ -262,6 +289,8 @@ public class ClothesAction extends ActionSupport{
 		});
 		return SUCCESS;
 	}
+
+
 	
 	public String ActionShowClothesType(){
 		
@@ -272,6 +301,7 @@ public class ClothesAction extends ActionSupport{
 				if(clothesTypeList!=null){
 					for(int i = 0;i<clothesTypeList.size();i++)
 					{
+
 						jsonData = new HashMap<String, String>();
 						jsonData.put("clothesType",clothesTypeList.get(i).subJson());
 						arrayData.add(jsonData);
@@ -281,6 +311,48 @@ public class ClothesAction extends ActionSupport{
 			}		
 		});	
 
+		return SUCCESS;
+	}
+	
+	public String ActionUpdateSuitsId(){
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.updateSuitsId(uuid,
+				new DataBaseListener<Clothes>() {
+			public void onSuccess(Clothes clothes) {
+				if (clothes != null) {
+					jsonData.put("clothes", clothes.subJson())	;
+								}
+							}
+			});
+		return SUCCESS;
+	}
+	
+	public String ActionUpdateClothesIsLike(){
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.updateClothesIsLike(uuid,
+				new DataBaseListener<Clothes>() {
+			public void onSuccess(Clothes clothes) {
+				if (clothes != null) {
+					jsonData.put("clothes", clothes.subJson())	;
+								}
+							}
+			});
+		return SUCCESS;
+	}
+	public String ActionQuerySuitByClothesId(){
+		arrayData = new ArrayList<HashMap<String,String>>();
+		final ClothesServiceImp cs = new ClothesServiceImp();
+		cs.querySuitByClothesId(uuid, new DataBaseListener<Suit>(){
+			public void onSuccess(List<Suit> suitList){
+				if(suitList!=null){
+					for(int i = 0;i<suitList.size();i++){
+						jsonData = new HashMap<String, String>();
+						jsonData.put("suit", suitList.get(i).subJson());
+						arrayData.add(jsonData);
+					}
+				}
+			}
+		});
 		return SUCCESS;
 	}
  }

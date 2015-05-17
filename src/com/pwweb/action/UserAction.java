@@ -37,6 +37,7 @@ public class UserAction extends ActionSupport {
 	private Date createTime;
 	private Date lastUse;
 	private String deviceId;
+	private String description;
 	
 	@ManyToOne
 	private User user;
@@ -49,6 +50,23 @@ public class UserAction extends ActionSupport {
 	private ArrayList<HashMap<String, Object>> arrayData;
 
 	
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public HashMap<String, String> getJsonData() {
+		return jsonData;
+	}
+
+	public void setJsonData(HashMap<String, String> jsonData) {
+		this.jsonData = jsonData;
+	}
+
 	public String getUid() {
 		return uid;
 	}
@@ -179,7 +197,7 @@ public class UserAction extends ActionSupport {
 	public String ActionUpdateUser() {
 		jsonData = new HashMap<String,String>();
 		final UserServiceImp us = new UserServiceImp();
-		us.updateUser(uid,name,avatar,new DataBaseListener<User>(){
+		us.updateUser(uid,name,avatar,description,new DataBaseListener<User>(){
 			public void onSuccess(User user){
 				if(user!=null){
 					jsonData.put("user", user.subJson());
@@ -194,13 +212,17 @@ public class UserAction extends ActionSupport {
 		return SUCCESS;
 	}
 
-	// public String ActionQueryByUsername(String username){
-	// user = this .userService.queryByUsername(user.getName());
-	// return SUCCESS;
-	// }
-	//
-	// public String ActionFindAllUser(){
-	// userList = this.userService.findAllUser();
-	// return SUCCESS;
-	// }
+   public String ActionQueryUserById(){
+	   jsonData = new HashMap<String,String>();
+	   final UserServiceImp us = new UserServiceImp();
+	   us.queryUserById(uid, new DataBaseListener<User>(){
+		   public void onSuccess(User user){
+			   if(user!=null){
+				   jsonData.put("user", user.subJson());
+			   }
+		   }
+	   });
+	   return SUCCESS;
+   }
+
 }

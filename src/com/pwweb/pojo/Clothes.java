@@ -18,7 +18,7 @@ public class Clothes implements java.io.Serializable {
 
 	// Fields
 
-	private String id;
+	private String uuid;
 	private String userId;
 	private Integer color;
 	private Integer category;
@@ -28,6 +28,8 @@ public class Clothes implements java.io.Serializable {
 	private String img;
 	private String suits;
 	private String description;
+	private Integer isLike;
+	private String thumb;
 
 	// Constructors
 
@@ -45,13 +47,12 @@ public class Clothes implements java.io.Serializable {
 		this.createTime = createTime;
 		this.lastEdit = lastEdit;
 	}
-	
 
 	/** full constructor */
-	public Clothes(String id,String userId, Integer color, Integer category,
+	public Clothes(String uuid,String userId, Integer color, Integer category,
 			Integer exponent, Date createTime, Date lastEdit, String img,
-			String suits, String description) {
-		this.id = id;
+			String suits, String description, Integer isLike, String thumb) {
+		this.uuid = uuid;
 		this.userId = userId;
 		this.color = color;
 		this.category = category;
@@ -61,18 +62,19 @@ public class Clothes implements java.io.Serializable {
 		this.img = img;
 		this.suits = suits;
 		this.description = description;
+		this.isLike = isLike;
+		this.thumb = thumb;
 	}
 
 	// Property accessors
 	@Id
-	@GeneratedValue
-	@Column(name = "id", unique = true, nullable = false)
-	public String getId() {
-		return this.id;
+	@Column(name = "uuid", unique = true, nullable = false)
+	public String getUuid() {
+		return this.uuid;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
 	}
 
 	@Column(name = "user_id", nullable = false)
@@ -155,10 +157,28 @@ public class Clothes implements java.io.Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
+	@Column(name = "is_like")
+	public Integer getIsLike() {
+		return this.isLike;
+	}
+
+	public void setIsLike(Integer isLike) {
+		this.isLike = isLike;
+	}
+
+	@Column(name = "thumb")
+	public String getThumb() {
+		return this.thumb;
+	}
+
+	public void setThumb(String thumb) {
+		this.thumb = thumb;
+	}
+
 	public String subJson() {
 		JSONObject result = new JSONObject();
-		result.put("id", id);
+		result.put("uuid", uuid);
 		result.put("user_id", userId);
 		result.put("color", color);
 		result.put("category", category);
@@ -168,8 +188,9 @@ public class Clothes implements java.io.Serializable {
 		result.put("img", img);
 		result.put("suits", suits);
 		result.put("description", description);
+		result.put("is_like", isLike);
+		result.put("thumb", thumb);
 		System.out.println(result.toString());
 		return result.toString();
 	}
-
 }

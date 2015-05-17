@@ -1,6 +1,7 @@
 package com.pwweb.service.Imp;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import com.pwweb.dao.BaseDAO;
 import com.pwweb.pojo.User;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 
 
 @Entity
@@ -43,7 +47,7 @@ public class UserServiceImp{
         listener.onFinish();
 	}
 
-	public void updateUser(String id,String name,String avatar,DataBaseListener<User>listener) {
+	public void updateUser(String id,String name,String avatar,String description,DataBaseListener<User>listener) {
 		// TODO Auto-generated method stub
 		listener.onStart();
 		BaseDAO updateDAO = new BaseDAO();
@@ -63,6 +67,7 @@ public class UserServiceImp{
 		  
 		Date date = new Date(System.currentTimeMillis());
 	    u.setLastUse(date); 
+	    u.setDescription(description);
 		try {
 			updateDAO.updateObject(u);
 			listener.onSuccess(u);
@@ -72,57 +77,21 @@ public class UserServiceImp{
 		listener.onFinish();
 	}
 
-
-
-//	public List<User> findAllUser() {
-//		// TODO Auto-generated method stub
-//
-//		return null;
-//	}
-
-	// public UserDAO userdao;
-//	
-//	
-//
-//	public UserDAO getUserdao() {
-//		return userdao;
-//	}
-//
-//	public void setUserdao(UserDAO userdao) {
-//		this.userdao = userdao;
-//	}
-//
-//	public void deleteUser(User user) {
-//		// TODO Auto-generated method stub
-//		this.userdao.deleteUser(user);
-//		
-//	}
-//
-//	
-//	public List<User> findAllUser() {
-//		// TODO Auto-generated method stub
-//		return this.userdao.findAllUser();
-//
-//	}
-//
-//	
-//	public User queryByUsername(String username) {
-//		// TODO Auto-generated method stub
-//		return this.userdao.queryByUsername(username);
-//	}
-//
-//	
-//	public void saveUser(User user) {
-//		// TODO Auto-generated method stub
-//		this.userdao.saveUser(user);
-//		
-//	}
-//
-//	
-//	public void updateUser(User user) {
-//		// TODO Auto-generated method stub
-//		this.userdao.updateUser(user);
-//		
-//	}
+    public void queryUserById(String id,DataBaseListener<User>listener){
+    	listener.onStart();
+    	BaseDAO queryDAO = new BaseDAO();
+//    	ArrayList<Criterion> res = new ArrayList<Criterion>();
+//    	res.add(Restrictions.eq("userId", id));
+    	try{
+    		User u = (User)queryDAO.findObjectById(User.class, id);
+    		User user = new User(u.getUid(),u.getName(),u.getGender(),u.getPassword(),u.getPhone(),u.getAvatar(),u.getCreateTime(),u.getLastUse(),u.getDeviceId(),u.getDescription());
+    		System.out.println("user:" + user.getName());
+    		System.out.println("user:" + user.getPassword());
+    		listener.onSuccess(user);
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	listener.onFinish();
+    }
 
 }

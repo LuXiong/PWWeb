@@ -53,7 +53,7 @@ public class PassService {
 			Date date = new Date(System.currentTimeMillis());
 			String uid = Utils.generateUUid();
 			User user = new User(uid, name, gender, password, phone, avatar,
-					date, date, deviceId);
+					date, date, deviceId,null);
 			Token token = new Token(Utils.generateUUid(), uid, date, password,
 					phone, date, deviceId);
 		if(avatar==null){
@@ -150,7 +150,7 @@ public class PassService {
 	 * @return
 	 */
 	public boolean isRightPassword(String password){
-		if((password.length()<16)&&(password.length()>6)){
+		if((password.length()<16)&&(password.length()>=6)){
 			return true;
 		}else{
 		    System.out.println("password的位数请位于6-16之间");

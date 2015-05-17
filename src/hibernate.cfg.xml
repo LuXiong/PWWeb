@@ -29,8 +29,11 @@
 		<mapping class="com.pwweb.pojo.Suit" />
 		<mapping class="com.pwweb.pojo.Token" />
 		<mapping class="com.pwweb.pojo.Message" />
-		<mapping class="com.pwweb.pojo.ClothesType" />
-
+		<mapping class="com.pwweb.pojo.ClothesType"/>
+        <mapping class="com.pwweb.pojo.Share" />
+        <mapping class="com.pwweb.pojo.UserShare" />
+        <mapping class="com.pwweb.pojo.UserSuit" />
+        <mapping class="com.pwweb.pojo.Comment" />
 
 	</session-factory>
 
